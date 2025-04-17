@@ -38,3 +38,6 @@ Tipos de registro:
 * Búsqueda manual indexado. 
 
 
+Prueba de escritura desde Visual Studio Code by Uri
+
+
