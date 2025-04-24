@@ -32,7 +32,7 @@ Se integrará en el ticket los siguientes datos de venta:
 Se busca llevar un registro de los Ingresos y la salida de dinero en el día a día, las ganancias por categoría de productos, si se cumplen las ventas esperadas del dia.
 
 ### (Opcional) Proyeccion de ganancias: establecida por el usuario
-Ejemplo de prueba: OOAOAAAAA
+Ejemplo de prueba:
 Ganancias mensuales deseadas $250.000 
 Se divide por dias del mes (30) $8.333,33
 
