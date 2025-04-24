@@ -5,7 +5,7 @@
 Se socilita un sistema que tenga como fin principal administrar el registro de ventas de un minimarket. En el cual se busca que sea capaz de registrar cada producto vendido en una caja registradora, comprobar si hay una existencia de stock, llevar un registro de los ingresos y egreso de dinero en el día a día y las ganancias por categoría de productos para asi poder llegar a un balance.
 
 ### Carateristicas generales
-El cajero a través de una lectura de código de barra, registra el código del producto a vender en el carrito de compra y lo agrega en un ticket DIGITAL que al momento de imprimirlo lo convierte en un comprobante del ticket y factura. Tambien genera una copia del mismo almacenada en una base de datos.
+El cajero a través de una lectura de código de barra, registra el código del producto a vender en el carrito de compra y lo guarda los detalles de la compra que al momento de imprimirlo lo convierte en un comprobante del ticket y factura. Tambien genera una copia del mismo almacenada en una base de datos.
 Se busca la automatización de la carga impositiva de los productos (I.V.A).  
 
 
