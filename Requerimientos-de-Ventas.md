@@ -17,6 +17,14 @@
 * El sistema debe tener una interfaz gráfica intuitiva y responsiva para facilitar su uso por parte del personal del minimarket.
 * El sistema debe garantizar tiempos de respuesta menores a 2 segundos por operación común.
 * El sistema debe realizar copias de seguridad automáticas diariamente/semanalmente.
+
+### Dominio
+
+* Toda factura debe incluir el IVA y debe ser de tipo A, B o C.
+* El ticket debe contener los datos fiscales exigidos por la ley, incluyendo un código QR, tipo de factura y razón social del comercio.
+* Todos los artículos deben ser cargados previamente a la base de datos. 
+
+
 ###### Version 1.1
 
 
