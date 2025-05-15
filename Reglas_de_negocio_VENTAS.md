@@ -18,7 +18,10 @@
 * Si el método de pago es tarjeta y la transacción es rechazada, entonces se solícita un nuevo método de pago.
 
 ## Cálculo 
-* El precio total de un pedido se calcula como la suma del precio de los artículos. pedidos, más el impuesto sobre las ventas, menos el descuento por volúmen. 
+* El precio total = (precio unitario + impuesto sobre las ventas)- descuento por volúmen. 
+* Margen de ganancia(En porcentaje) = (precio de venta -costo)/ precio de venta) x 100.
+* IVA por producto= precio del producto x porcentaje de iva.
+
 
 ## Inferencia 
 * Si el cliente ha comprado mas de 20 veces en el último mes, entonces es considerado cliente frecuente.
