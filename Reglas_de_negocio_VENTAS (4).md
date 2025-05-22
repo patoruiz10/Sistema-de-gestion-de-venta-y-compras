@@ -5,13 +5,8 @@
 
 ## Restricciones
 * El sistema no permite finalizar una venta si no se emite un comprobante fiscal electronico que cumpla con las condiciones establecidas por ARCA:
-<<<<<<< HEAD
     * Ser electronico y válido ante ARCA.
     * Inluir la condicion frente al IVA del cliente(CF,RI,etc.)
-=======
-    * Ser electronico y válido ante AFIP.
-    * Incluir la condicion frente al IVA del cliente(CF,RI,etc.)
->>>>>>> 8e9e9f6fafd4e09d469236934c78cd0ddb4b17c6
     * Estar asociado a un punto de venta habilitado.
     * Cumplimiento de precios de los productos 
 * No se puede operar el sistema sin iniciar sesión con un usuario válido.
