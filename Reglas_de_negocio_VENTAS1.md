@@ -20,7 +20,7 @@
 
 ## Cálculo 
 * El precio total de la venta será igual al precio unitario del producto más el impuesto sobre el mismo menos el descuento por el volumen de la compra. 
-* El margen de ganancia es el precio de venta menos el costo sobre precio de venta.
+* El margen de ganancia del negocio es el precio de venta al cliente menos el costo sobre precio de compra del producto menos costo de reabastecimiento del producto.
 * El IVA del producto se calcula como el precio del producto por el porcentaje del iva correspondiente.
 
 
