@@ -5,8 +5,13 @@
 
 ## Restricciones
 * El sistema no permite finalizar una venta si no se emite un comprobante fiscal electronico que cumpla con las condiciones establecidas por ARCA:
-    * Ser electronico y válido ante AFIP.
+<<<<<<< HEAD
+    * Ser electronico y válido ante ARCA.
     * Inluir la condicion frente al IVA del cliente(CF,RI,etc.)
+=======
+    * Ser electronico y válido ante AFIP.
+    * Incluir la condicion frente al IVA del cliente(CF,RI,etc.)
+>>>>>>> 8e9e9f6fafd4e09d469236934c78cd0ddb4b17c6
     * Estar asociado a un punto de venta habilitado.
     * Cumplimiento de precios de los productos 
 * No se puede operar el sistema sin iniciar sesión con un usuario válido.
@@ -16,11 +21,11 @@
 
 ## Acciones disparadoras
 * Si es el primer dia del mes, debe generar un informe de las ventas del mes anterior.
-* Si el cliente es frecuente, se le otorgará algunos beneficios.
+* Si el cliente es frecuente, se le otorgará determinados beneficios.
 
 ## Cálculo 
-* El precio total de la venta será igual al precio unitario del producto más el impuesto sobre el mismo menos el descuento por el volumen de la compra. 
-* El margen de ganancia es el precio de venta menos el costo sobre precio de venta.
+* El precio total de la venta será igual al precio unitario del producto, más el impuesto sobre el mismo, menos el descuento (beneficios y/o promociones) por el volumen de la compra. 
+* El margen de ganancia del negocio es el precio de venta al cliente menos el costo sobre precio de compra del producto menos costo de reabastecimiento del producto.
 * El IVA del producto se calcula como el precio del producto por el porcentaje del iva correspondiente.
 
 
