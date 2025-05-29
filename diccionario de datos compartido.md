@@ -1,21 +1,18 @@
 **DICCIONARIO DE DATOS:**
 
-Producto = CodBarra+Cant+Desc+TipoProducto+Nombre+NomMarca  
-TipoDeProducto = [Bebidas|Mercadería|Cigarrillos]
+Producto = CodBarra + CantStock + Desc + TipoProducto + Nombre + NomMarca  
 
-Mercadería = [Limpieza|Comida|Bebida|Golosinas|Medicamentos] 
-Bebidas = NombreMarca+Producto  
-Cigarrillos = Producto+NombreDeMarca+TipoDeCigarrillo
+TipoDeProducto = [Bebidas| Mercadería| Cigarrillos| Limpieza| Comida| Golosinas| Medicamentos] 
 
 MetodoPago = [Efectivo|Transferencia| Débito| Crédito| QR ]
   
   
-  *** PROCESO DE VENTAS***
+ **PROCESO DE VENTAS:**
   
-venta = metodopago+producto+preciototal+cantProd+FechaHora
-preciototal = preciounit*cant
+venta = metodopago + 1{ProdVen}n + precioTotal + 1{cantProd}n + FechaHora
+preciototal = preciounit * cantProd
 
-
+ProdVen = Nombre + Precio 
 
 
 
@@ -24,7 +21,7 @@ preciototal = preciounit*cant
 | CodBarra | Código identificatorio de producto | 13 dígitos  | entero | continuo 0-99999999 |
 | Cant | Cantidad de producto en stock | 4 dígitos  | entero | continuo |
 | Desc | Descripción del producto  | 100  | string | continuo (texto libre) |
-| TipoDeProducto | Categoría de producto | 15 | string | \[Bebidas|Mercadería|Cigarrillos \] |
+| TipoDeProducto | Categoría de producto | 15 | string | discreto \[ Bebidas|Mercadería|Cigarrillos|Limpieza|Comida|Golosinas|Medicamentos\] |
 | Nombre | Nombre de producto  | 50 | string | continuo (texto libre) |
 | NomMarca | Marca del producto | 50 | string | continuo (texto libre) |
 | FechaHora  | Indicador del dia y hora  | datetime  | \- | continuo |
