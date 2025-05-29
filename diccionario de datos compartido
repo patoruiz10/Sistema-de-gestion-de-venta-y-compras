@@ -1,9 +1,22 @@
-
-
 **DICCIONARIO DE DATOS:**
 
-* Producto= CodBarra+Cant+Desc+TipoProducto+Nombre+NomMarca  
-* Fecha=Dia+Mes+Año+Hora
+Producto = CodBarra+Cant+Desc+TipoProducto+Nombre+NomMarca  
+TipoDeProducto = [Bebidas|Mercadería|Cigarrillos]
+
+Mercadería = [Limpieza|Comida|Bebida|Golosinas|Medicamentos] 
+Bebidas = NombreMarca+Producto  
+Cigarrillos = Producto+NombreDeMarca+TipoDeCigarrillo
+
+MetodoPago = [Efectivo|Transferencia| Débito| Crédito| QR ]
+  
+  
+  *** PROCESO DE VENTAS***
+  
+venta = metodopago+producto+preciototal+cantProd+FechaHora
+preciototal = preciounit*cant
+
+
+
 
 
 | NOMBRE | DESCRIPCIÓN | LONGITUD | TIPO  | DOMINIO |
@@ -24,23 +37,7 @@
 
 
 
-  ---
 
-
-  **Ventas** 👍
-
-  TipoDeProducto= \[Bebidas|Mercadería|Cigarrillos \]
-
-  Mercadería= \[Limpieza|Comida|Bebida|Golosinas|Medicamentos\]
-
-  MetodoPago= \[Efectivo|Transferencia| Débito| Crédito| QR \]
-
-	venta=metodopago+producto+preciototal+cantProd  
-	ticket= venta+preciototal  
-	preciototal=preciounit\*cant
-
-//Bebidas= Nombre de Marca+Producto  
-//Cigarrillos \= Producto \+ NombreDeMarca \+ TipoDeCigarrillo
 
    
 	STOCK
