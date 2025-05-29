@@ -1,43 +1,5 @@
-**DICCIONARIO DE DATOS:**
+#proyecto minimarket 
+##control de stock 
+###enunciado general 
 
-Producto = CodBarra + CantStock + Desc + TipoProducto + Nombre + NomMarca  
-
-TipoDeProducto = [Bebidas| Mercadería| Cigarrillos| Limpieza| Comida| Golosinas| Medicamentos] 
-
-MetodoPago = [Efectivo|Transferencia| Débito| Crédito| QR ]
-  
-  
- **PROCESO DE VENTAS:**
-  
-venta = metodopago + 1{ProdVen}n + precioTotal + 1{cantProd}n + FechaHora
-preciototal = preciounit * cantProd
-
-ProdVen = Nombre + Precio 
-
-
-
-| NOMBRE | DESCRIPCIÓN | LONGITUD | TIPO  | DOMINIO |
-| ----- | ----- | ----- | ----- | ----- |
-| CodBarra | Código identificatorio de producto | 13 dígitos  | entero | continuo 0-99999999 |
-| Cant | Cantidad de producto en stock | 4 dígitos  | entero | continuo |
-| Desc | Descripción del producto  | 100  | string | continuo (texto libre) |
-| TipoDeProducto | Categoría de producto | 15 | string | discreto \[ Bebidas|Mercadería|Cigarrillos|Limpieza|Comida|Golosinas|Medicamentos\] |
-| Nombre | Nombre de producto  | 50 | string | continuo (texto libre) |
-| NomMarca | Marca del producto | 50 | string | continuo (texto libre) |
-| FechaHora  | Indicador del dia y hora  | datetime  | \- | continuo |
-| Mercadería  | Sub categoría de producto  | 50 | string  | discreto\[Limpieza|Comida|Bebida|Golosinas|Medicamentos\]  |
-| MetodoPago | Pago de productos | 50 | string | discreto \[Efectivo|Transferencia| Débito| Crédito| QR \] |
-| Monto | Precio del producto | 7 dígitos | Double | Continuo  0-9999999 |
-|  |  |  |  |  |
-
-
-
-
-
-
-
-   
-	STOCK
-
-* Producto=CodBarra+TipoProducto+Nombre+NomMarca+Cant+Desc
-
+Un negocio requiere un sistema de manejo de stock, para controlar la    mercadería disponible y la mercadería faltante para el momento de    hacer pedidos. El sistema tiene que tener una vinculación con la    parte de ventas para que al momento de vender un producto se    descuente de la cantidad total. El sistema debe mostrar fecha, hora,    usuario de empleado, nombre del negocio Debe haber una librería con    productos más los precios de costo y a su vez el precio para la    venta, cada uno debe contar con codigo de barra para su    identificación Al venderse un producto se tiene que organizar    dependiendo de su clasificación**
