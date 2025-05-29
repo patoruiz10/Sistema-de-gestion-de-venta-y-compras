@@ -19,7 +19,7 @@
 * Si el cliente es frecuente, se le otorgará determinados beneficios.
 
 ## Cálculo 
-* El precio total de la venta será igual al precio unitario del producto más el impuesto sobre el mismo menos el descuento por el volumen de la compra. 
+* El precio total de la venta será igual al precio unitario del producto más el impuesto sobre el mismo, en caso de ser cliente frecuente, se aplica un descuento por el volumen de la compra. 
 * El margen de ganancia del negocio es el precio de venta al cliente, menos el costo sobre precio de compra del producto, menos costo de reabastecimiento del producto.
 * El IVA del producto se calcula como el precio del producto por el porcentaje del iva correspondiente.
 
