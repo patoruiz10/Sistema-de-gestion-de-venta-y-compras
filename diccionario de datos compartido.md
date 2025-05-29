@@ -25,7 +25,7 @@ preciototal = preciounit*cant
 | CodBarra | Código identificatorio de producto | 13 dígitos | entero | continuo 0-99999999 |
 | Cant | Cantidad de producto en stock | 4 dígitos | entero | continuo |
 | Desc | Descripción del producto | 100 | string | continuo (texto libre) |
-| TipoDeProducto | Categoría de producto | 15 | string | discreto[Bebidas|Cigarrillos|Limpieza|Comidas|Golosinas|Medicamentos] |
+| TipoDeProducto | Categoría de producto | 15 | string | discreto[Bebidas | Cigarrillos | Limpieza | Comidas | Golosinas | Medicamentos] |
 | Nombre | Nombre de producto | 50 | string | continuo (texto libre) |
 | NomMarca | Marca del producto | 50 | string | continuo (texto libre) |
 | FechaHora | Indicador del dia y hora | datetime | \- | continuo |
