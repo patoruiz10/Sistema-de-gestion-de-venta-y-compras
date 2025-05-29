@@ -4,6 +4,7 @@ Producto = CodBarra+Cant+Desc+TipoProducto+Nombre+NomMarca
 TipoDeProducto = [Bebidas|Mercadería|Cigarrillos]
 
 Mercadería = [Limpieza|Comida|Bebida|Golosinas|Medicamentos] 
+
 Bebidas = NombreMarca+Producto  
 Cigarrillos = Producto+NombreDeMarca+TipoDeCigarrillo
 
