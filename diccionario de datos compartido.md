@@ -1,30 +1,53 @@
-﻿**DICCIONARIO DE DATOS:**
+﻿# Diccionario de Datos
 
-Producto \= CodBarra \+ CantStock \+ Desc \+ TipoProducto \+ Nombre \+ NomMarca
+## Producto
 
-TipoDeProducto \= \[Bebidas| Mercadería| Cigarrillos| Limpieza| Comida| Golosinas| Medicamentos\]
+```
+Producto = CodBarra + CantStock + Desc + TipoProducto + Nombre + NomMarca
+```
 
-MetodoPago \= \[Efectivo|Transferencia| Débito| Crédito| QR \]
+## TipoDeProducto
 
-**PROCESO DE VENTAS:**
+```
+TipoDeProducto = [Bebidas | Mercadería | Cigarrillos | Limpieza | Comida | Golosinas | Medicamentos]
+```
 
-venta \= metodopago \+ 1{ProdVen}n \+ precioTotal \+ 1{cantProd}n \+ FechaHora  
-preciototal \= preciounit \* cantProd
+## MetodoPago
 
-ProdVen \= Nombre \+ Precio
+```
+MetodoPago = [Efectivo | Transferencia | Débito | Crédito | QR]
+```
 
-| NOMBRE | DESCRIPCIÓN | LONGITUD | TIPO | DOMINIO |
-| :---- | :---- | :---- | :---- | :---- |
-| CodBarra | Código identificatorio de producto | 13 dígitos | entero | continuo 0-99999999 |
-| Cant | Cantidad de producto en stock | 4 dígitos | entero | continuo |
-| Desc | Descripción del producto | 100 | string | continuo (texto libre) |
-| TipoDeProducto | Categoría de producto | 15 | string | discreto\[Bebidas| Cigarrillos| Limpieza|Comidas| Golosinas|Medicamentos\] |
-| Nombre | Nombre de producto | 50 | string | continuo (texto libre) |
-| NomMarca | Marca del producto | 50 | string | continuo (texto libre) |
-| FechaHora | Indicador del dia y hora | datetime | \- | continuo |
-| MetodoPago | Pago de productos | 50 | string | discreto \[Efectivo|Transferencia| Débito| Crédito| QR\] |
-| Monto | Precio del producto | 7 dígitos | Double | Continuo 0-9999999 |
+---
 
-STOCK
+## Proceso de Ventas
 
-* Producto=CodBarra+TipoProducto+Nombre+NomMarca+Cant+Desc
+```
+venta = MetodoPago + 1{ProdVen}n + PrecioTotal + 1{CantProd}n + FechaHora
+PrecioTotal = PrecioUnit * CantProd
+ProdVen = Nombre + Precio
+```
+
+---
+
+## Tabla de Atributos
+
+| Nombre        | Descripción                              | Longitud   | Tipo     | Dominio                                                                 |
+|---------------|------------------------------------------|------------|----------|-------------------------------------------------------------------------|
+| CodBarra      | Código identificatorio de producto        | 13 dígitos | Entero   | Continuo 0–99999999                                                     |
+| Cant          | Cantidad de producto en stock             | 4 dígitos  | Entero   | Continuo                                                                |
+| Desc          | Descripción del producto                  | 100        | String   | Continuo (texto libre)                                                  |
+| TipoProducto  | Categoría de producto                     | 15         | String   | Discreto [Bebidas | Cigarrillos | Limpieza | Comidas | Golosinas | Medicamentos] |
+| Nombre        | Nombre de producto                        | 50         | String   | Continuo (texto libre)                                                  |
+| NomMarca      | Marca del producto                        | 50         | String   | Continuo (texto libre)                                                  |
+| FechaHora     | Indicador del día y hora                  | datetime   | -        | Continuo                                                                |
+| MetodoPago    | Forma de pago                             | 50         | String   | Discreto [Efectivo | Transferencia | Débito | Crédito | QR]           |
+| Monto         | Precio del producto                       | 7 dígitos  | Double   | Continuo 0–9999999                                                      |
+
+---
+
+## Stock
+
+```
+Producto = CodBarra + TipoProducto + Nombre + NomMarca + Cant + Desc
+```
