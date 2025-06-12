@@ -16,7 +16,7 @@ Se debe enviar a Arca un informe del comprobante con lo facturado en el día.
 1.a El código de producto ingresado no está registrado en el sistema.  
 1.a.1 El sistema muestra una alerta: "Código inexistente", vuelva al paso 1.  
 3.a El método de pago no está disponible.  
-3.a.1 El sistema muestra una alerta: "Método de pago no disponible", vuelva al paso 3.
+3.a.1 El sistema muestra una alerta: "Método de pago no disponible", vuelva al paso 3.  
 4.a El monto elegido no se puede concretar por fondos insuficientes.  
 4.a.1 El sistema muestra un mensaje: "No es posible efectuar el pago", vuelva al paso 3.  
 4.b El monto elegido no se puede concretar por tener que sustituir el método de pago elegido.  
