@@ -3,7 +3,7 @@
 
 ### Enunciado general 
 Un negocio requiere un sistema de manejo de stock, para controlar la mercadería disponible y la mercadería faltante para el momento de hacer pedidos. 
-El sistema tiene que tener una vinculación con la parte de ventas para que al momento de vender un producto se descuente de la cantidad total. 
+El sistema tiene que tener una vinculación con la parte de ventas para que al momento de vender un producto se descuente de la cantidad total de los mismos. 
 la mercaderia en general debe estar divida por tipo de producto (golosina, bebidad, cigarrillos, etc)
 
 ### Caracteriticas del sistema
