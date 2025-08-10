@@ -1,9 +1,9 @@
 # Caso de uso: Consulta de historial de ventas
 
-Actores primarios: Empleado, encargado  
-Actores secundarios: No tiene  
-Precondición: El usuario debe tener permisos  
-Postcondición: No tiene
+* Actores primarios: Empleado, encargado  
+* Actores secundarios: No tiene  
+* Precondición: El usuario debe tener permisos  
+* Postcondición: No tiene
 
 ### Camino básico: 
 1. El usuario selecciona la opción de “Consulta de historial de ventas” dentro del sistema con el mouse. 
