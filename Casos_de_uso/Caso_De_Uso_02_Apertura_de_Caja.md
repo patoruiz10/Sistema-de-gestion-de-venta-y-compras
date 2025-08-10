@@ -1,4 +1,4 @@
-#Caso de uso: Apertura de Caja
+# Caso de uso: Apertura de Caja
 **Actores primarios: Empleado, Encargado**
 **Actores secundarios: No tiene**
 **Precondición: El usuario debe tener permisos**
