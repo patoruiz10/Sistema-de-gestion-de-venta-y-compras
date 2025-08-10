@@ -12,13 +12,13 @@ Postcondición: No tiene
 * El sistema muestra un formulario con todas las ventas realizadas en la fecha consultada.
            
 Caminos alternativos:
-	4.a No se encontraron ventas registradas en la fecha consultada.
-	4.a.1 El sistema muestra una alerta con un mensaje que indica que en la fecha consultada no se encontraron ventas registradas.
-	4.a.2 Vuelve al paso “3”.
-	4.b La fecha ingresada corresponde a una fecha futura.   
-	4.b.1 El sistema muestra una alerta de que la fecha es futura.
+4.a No se encontraron ventas registradas en la fecha consultada.
+4.a.1 El sistema muestra una alerta con un mensaje que indica que en la fecha consultada no se encontraron ventas registradas.
+4.a.2 Vuelve al paso “3”.
+4.b La fecha ingresada corresponde a una fecha futura.   
+4.b.1 El sistema muestra una alerta de que la fecha es futura.
 4.b.2 Vuelve al paso “3”.
-	4.c Consulta no realizada por falta de datos (fecha)
+4.c Consulta no realizada por falta de datos (fecha)
 4.c.1 El sistema muestra una alerta con un mensaje que informa que falta completar la fecha.
 4.c.2 Vuelve al paso “3”.
 
