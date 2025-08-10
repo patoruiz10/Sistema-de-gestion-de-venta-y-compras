@@ -1,12 +1,8 @@
 # Caso de uso: Apertura de Caja
-**Actores primarios: Empleado, Encargado**
-
-**Actores secundarios: No tiene**
-
-**Precondición: El usuario debe tener permisos**
-
-**Postcondición: No tiene**
-
+* Actores primarios: Empleado, Encargado
+* Actores secundarios: No tiene
+* Precondición: El usuario debe tener permisos
+* Postcondición: No tiene
 
 ### Camion Básico
 * El usuario selecciona la opción de “Apertura Caja”.
