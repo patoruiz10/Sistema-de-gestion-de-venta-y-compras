@@ -1,15 +1,15 @@
-# Caso de uso: Consulta de historial de ventas
+﻿# Caso de uso: Consulta de historial de ventas
 
 * Actores primarios: Empleado, encargado  
 * Actores secundarios: No tiene  
-* Precondición: El usuario debe tener permisos  
+* Precondición: El usuario debe estar logueado como encargado 
 * Postcondición: No tiene
 
 ### Camino básico: 
-1. El usuario selecciona la opción de “Consulta de historial de ventas” dentro del sistema con el mouse. 
-2. El sistema muestra un formulario con opciones para consultar todas las ventas correspondientes de un día en particular, semana o mes.  
-3. El usuario elige la opción deseada y realiza la consulta.  
-4. El sistema muestra un formulario con todas las ventas realizadas en la fecha consultada.
+1. El usuario selecciona la opción de “Consulta de historial de ventas”. 
+2. El sistema muestra opciones para consultar todas las ventas correspondientes de un día en particular, semana o mes.  
+3. El usuario elige la opción deseada.  
+4. El sistema muestra todas las ventas realizadas en la fecha consultada.
 
              
 ### Caminos alternativos:  
@@ -24,7 +24,10 @@
 4.c.2 Vuelve al paso “3”.
 
 ### Escenario de éxito:
-* El usuario pudo realizar la consulta de ventas efectivamente.
+* El usuario pudo realizar la consulta de ventas.
 
 ### Escenario de fracaso:
-* El usuario no pudo realizar la consulta de ventas efectivamente.
+* El usuario no pudo realizar la consulta de ventas porque no se encontraron ventas registradas.
+* El usuario no pudo realizar la consulta de ventas porque la fecha es futura.
+* El usuario no pudo realizar la consulta de ventas porque falta completar la fecha.
+
