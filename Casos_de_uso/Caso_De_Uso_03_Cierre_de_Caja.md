@@ -6,7 +6,7 @@
 
 ### Camino básico: 
 1. El usuario selecciona la opción de “Cierre de caja”.
-2. El sistema informa mediante una alerta que se hizo el “cierre de caja con (fecha y hora).” y muestra un informe con todas las ventas realizadas en el día.
+2. El sistema informa mediante una alerta visual que se hizo el “cierre de caja con (fecha y hora).” y muestra un informe con todas las ventas realizadas en el día.
            
 ### Caminos alternativos:
 * No tiene.

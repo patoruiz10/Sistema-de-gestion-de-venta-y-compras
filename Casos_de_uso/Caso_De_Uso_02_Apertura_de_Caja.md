@@ -8,10 +8,10 @@
 * El usuario selecciona la opción de “Apertura Caja”.
 * El sistema muestra un mensaje para ingresar el usuario y la contraseña (credenciales).
 * El usuario se loguea con sus credenciales.
-* El sistema verifica las credenciales del usuario, abre la caja y muestra una alerta con un mensaje “Se abrió la caja correctamente (fecha del día y hora)”
+* El sistema verifica las credenciales del usuario, abre la caja y muestra una alerta visual con un mensaje “Se abrió la caja correctamente (fecha del día y hora)”
 
 ### Caminos alternativos:
-4.a Las credenciales ingresadas son incorrectas o no tiene permisos para ingresar al sistema.  
+4.a Las credenciales ingresadas son incorrectas y no puede acceder al sistema.  
 4.a.1 El sistema no pudo corroborar correctamente las credenciales ingresadas entonces se muestra una alerta: “Las credenciales ingresadas son incorrectas o no tiene permisos.”  
 4.a.2  Vuelve al paso “3”.
 
