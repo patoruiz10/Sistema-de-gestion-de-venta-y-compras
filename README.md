@@ -1,1 +1,0 @@
-# Sistema-de-gesti-n-de-venta-y-compras
