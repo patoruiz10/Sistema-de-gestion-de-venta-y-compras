@@ -2,12 +2,12 @@
 
 * Actores primarios:  encargado, empleador
 * Actores secundario: no tiene
-* Pre condiciones: el usuario debe tener permisos
+* Pre condiciones: el usuario debe tener permisos para crear nuevo usuario
 * Post condiciones: no tiene
 
 
 ### Camino basico:
-1. El usuario elige el tipo de usuario que quiere crear (si es administrador/empleado), e ingresa sus datos (nombre de usuario, contraseña, tipo de usuario).
+1. El usuario elige el tipo de usuario que quiere crear (si es administrador/empleado), e ingresa sus datos (nombre de usuario, contraseï¿½a, tipo de usuario).
 2. El sistema crea el usuario.
 
 ### Caminos alternativos: 
