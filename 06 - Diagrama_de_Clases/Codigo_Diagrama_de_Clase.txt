@@ -5,109 +5,84 @@ title Diagrama de Clases - Minimarket (con métodos completos)
 ' ==== CLASES ====
 
 class Producto {
-  - id : UUID
   - nombre : String
   - precio : Money
   - codigoBarra : String
-  + cambiarPrecio(nuevo : Money)
+  + cambiarPrecio(nuevo : float)
 }
 
 class Categoria {
-  - id : UUID
   - nombre : String
-  + agregarProducto(p : Producto)
-  + quitarProducto(p : Producto)
-}
-
-class Especificacion {
-  - clave : String
-  - valor : String
-  + actualizarValor(v : String)
+  + agregarProducto(p : int)
+  + quitarProducto(p : int)
 }
 
 class Inventario {
-  - id : UUID
   - cantidad : int
-  + descontar(qty : int)
-  + reponer(qty : int)
+  + descontar(cant : int)
+  + reponer(cant : int)
   + verificarStock() : boolean
 }
 
 class Cliente {
-  - id : UUID
   - nombre : String
-  - email : String
-  + realizarVenta(v : Venta)
-  + devolverVenta(d : Devolucion)
+  + realizarVenta(v : int)
+  + devolverVenta(d : int)
 }
 
 class Venta {
-  - id : UUID
   - fecha : Date
-  - total : Money
-  + calcularTotal() : Money
-  + agregarLinea(l : LineaDeVenta)
-  + eliminarLinea(l : LineaDeVenta)
-  + aplicarMetodoPago(m : MetodoDePago)
+  - total : float
+  + calcularTotal() : float
+  + agregarLinea(l : string)
+  + eliminarLinea(l : string)
+  + aplicarMetodoPago(m : int)
   + procesarVenta()
 }
 
 class LineaDeVenta {
   - cantidad : int
-  - precioUnitario : Money
-  + calcularSubtotal() : Money
-  + actualizarCantidad(qty : int)
+  - precioUnitario : float
+  + calcularSubtotal() : float
+  + actualizarCantidad(cant : int)
 }
 
 class Empleado {
-  - id : UUID
   - nombre : String
   - rol : String
-  + procesarVenta(v : Venta)
-  + registrarDevolucion(d : Devolucion)
+  + procesarVenta(v : bool)
 }
 
 class Caja {
-  - id : UUID
   - numero : int
-  + registrarVenta(v : Venta)
+  + registrarVenta(v : bool)
   + abrir()
   + cerrar()
 }
 
 class Proveedor {
-  - id : UUID
   - nombre : String
-  - telefono : String
-  + enviarProducto(p : Producto, qty : int)
+  - telefono : int
+  + enviarProducto(p : Producto, cant : int)
   + recibirPago(amount : Money)
 }
 
 class Promocion {
-  - id : UUID
   - descripcion : String
   - descuento : double
-  + aplicarAProducto(p : Producto)
+  + aplicarAProducto(p : int)
   + quitarDeProducto(p : Producto)
 }
 
-class Devolucion {
-  - id : UUID
-  - fecha : Date
-  - motivo : String
-  + procesar()
-}
-
 class MetodoDePago {
-  - tipo : String
+  - tipo : int
   - detalles : String
   + validar() : boolean
-  + registrarPago(amount : Money)
+  + registrarPago(amount : float)
 }
 
 ' ==== RELACIONES ====
 
-Producto "1..1" -- "0..*" Especificacion : tiene
 Producto "1..1" -- "0..*" Categoria : pertenece_a
 Producto "1..1" -- "0..1" Inventario : stock
 Producto "1..1" -- "0..*" Proveedor : suministrado_por
@@ -121,6 +96,5 @@ Caja "1..1" -- "0..*" Venta : registra
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 
 Promocion "0..*" -- "0..*" Producto : aplica_a
-Devolucion "1..1" -- "1..*" LineaDeVenta : referencia_a
 
 @enduml
