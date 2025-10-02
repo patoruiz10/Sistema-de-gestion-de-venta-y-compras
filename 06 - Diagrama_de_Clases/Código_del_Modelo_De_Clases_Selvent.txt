@@ -1,6 +1,6 @@
-﻿@startuml
+@startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Minimarket (con métodos completos)
+title Diagrama de Clases - Minimarket (con m�todos completos)
 
 ' ==== CLASES ====
 
