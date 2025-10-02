@@ -1,0 +1,37 @@
+@startuml
+!theme reddress-lightblue
+title Diagrama de Secuencia de Diseño - Apertura de Caja
+
+actor Usuario
+participant InterfazUsuario
+participant GestorAutenticacion
+participant Caja
+
+Usuario -> InterfazUsuario : seleccionarOpcion("Apertura Caja")
+activate InterfazUsuario
+InterfazUsuario -> Usuario : solicitarCredenciales()
+
+Usuario -> InterfazUsuario : ingresarCredenciales(usuario, contraseña)
+InterfazUsuario -> GestorAutenticacion : validarCredenciales(usuario, contraseña)
+activate GestorAutenticacion
+
+alt credencialesCorrectas
+    GestorAutenticacion --> InterfazUsuario : credencialesValidadas
+    deactivate GestorAutenticacion
+    
+    InterfazUsuario -> Caja : abrir()
+    activate Caja
+    Caja --> InterfazUsuario : cajaAbiertaOK
+    deactivate Caja
+    
+    InterfazUsuario -> Usuario : mostrarMensaje("Caja abierta correctamente (fecha, hora)")
+
+else credencialesIncorrectas
+    GestorAutenticacion --> InterfazUsuario : errorValidacion
+    deactivate GestorAutenticacion
+    
+    InterfazUsuario -> Usuario : mostrarError("Credenciales incorrectas o sin permisos")
+end
+
+deactivate InterfazUsuario
+@enduml
