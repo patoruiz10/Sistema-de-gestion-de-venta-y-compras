@@ -1,0 +1,100 @@
+@startuml
+!theme reddress-lightblue
+title Diagrama de Clases - Minimarket (con métodos completos)
+
+' ==== CLASES ====
+
+class Producto {
+  - nombre : String
+  - precio : Money
+  - codigoBarra : String
+  + cambiarPrecio(nuevo : float)
+}
+
+class Categoria {
+  - nombre : String
+  + agregarProducto(p : int)
+  + quitarProducto(p : int)
+}
+
+class Inventario {
+  - cantidad : int
+  + descontar(cant : int)
+  + reponer(cant : int)
+  + verificarStock() : boolean
+}
+
+class Cliente {
+  - nombre : String
+  + realizarVenta(v : int)
+  + devolverVenta(d : int)
+}
+
+class Venta {
+  - fecha : Date
+  - total : float
+  + calcularTotal() : float
+  + agregarLinea(l : string)
+  + eliminarLinea(l : string)
+  + aplicarMetodoPago(m : int)
+  + procesarVenta()
+}
+
+class LineaDeVenta {
+  - cantidad : int
+  - precioUnitario : float
+  + calcularSubtotal() : float
+  + actualizarCantidad(cant : int)
+}
+
+class Empleado {
+  - nombre : String
+  - rol : String
+  + procesarVenta(v : bool)
+}
+
+class Caja {
+  - numero : int
+  + registrarVenta(v : bool)
+  + abrir()
+  + cerrar()
+}
+
+class Proveedor {
+  - nombre : String
+  - telefono : int
+  + enviarProducto(p : Producto, cant : int)
+  + recibirPago(amount : Money)
+}
+
+class Promocion {
+  - descripcion : String
+  - descuento : double
+  + aplicarAProducto(p : int)
+  + quitarDeProducto(p : Producto)
+}
+
+class MetodoDePago {
+  - tipo : int
+  - detalles : String
+  + validar() : boolean
+  + registrarPago(amount : float)
+}
+
+' ==== RELACIONES ====
+
+Producto "1..1" -- "0..*" Categoria : pertenece_a
+Producto "1..1" -- "0..1" Inventario : stock
+Producto "1..1" -- "0..*" Proveedor : suministrado_por
+
+Venta "1..1" -- "1..*" LineaDeVenta : compuesta_por
+LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
+
+Cliente "1..1" -- "0..*" Venta : realiza
+Empleado "1..1" -- "0..*" Venta : procesa
+Caja "1..1" -- "0..*" Venta : registra
+Venta "1..1" -- "1..*" MetodoDePago : pagada_con
+
+Promocion "0..*" -- "0..*" Producto : aplica_a
+
+@enduml
