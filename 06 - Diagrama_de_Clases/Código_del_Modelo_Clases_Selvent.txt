@@ -9,6 +9,7 @@ class Producto {
   - precio : Money
   - codigoBarra : String
   + cambiarPrecio(nuevo : float)
+  + añadirProductoNuevo()
 }
 
 class Categoria {
@@ -26,16 +27,12 @@ class Inventario {
 
 class Cliente {
   - nombre : String
-  + realizarVenta(v : int)
-  + devolverVenta(d : int)
+  + efectuaPago(mdp : int)
 }
 
 class Venta {
   - fecha : Date
   - total : float
-  + calcularTotal() : float
-  + agregarLinea(l : string)
-  + eliminarLinea(l : string)
   + aplicarMetodoPago(m : int)
   + procesarVenta() : boolean
 }
@@ -43,21 +40,27 @@ class Venta {
 class LineaDeVenta {
   - cantidad : int
   - precioUnitario : float
-  + calcularSubtotal() : float
   + actualizarCantidad(cant : int)
 }
 
 class Empleado {
   - nombre : String
   - rol : String
-  + procesarVenta(v : boolean)
+  + registrarProductos(prod : int)
+  +inicioSesion() : boolean
+  +cierraSesion() : boolean
 }
 
 class Caja {
   - numero : int
-  + registrarVenta(v : boolean)
+  + registrarVenta() : boolean
   + abrir() : boolean
   + cerrar() : boolean
+  + registraPago(amount : float)
+  + calcularSubtotal() : float
+  + calcularTotal() : float
+  + agregarLinea(l : string)
+  + eliminarLinea(l : string)
 }
 
 class Proveedor {
@@ -70,21 +73,30 @@ class Proveedor {
 class Promocion {
   - descripcion : String
   - descuento : double
-  + aplicarAProducto(p : int)
-  + quitarDeProducto(p : Producto)
+  + aplicarDescuento(d : float)
+  
 }
 
 class MetodoDePago {
   - tipo : int
   - detalles : String
   + validar() : boolean
-  + registrarPago(amount : float)
+}
+class Impresion {
+    - fechaHora : DateTime
+    - contenido : String
+    - nroTicket : int
+    - ventaAsociada : Venta
+    - empleado : Empleado
+    + generarContenido(v : Venta)
+    + imprimirTicket() 
+    + guardarComprobante() 
 }
 
 ' ==== RELACIONES ====
 
 Producto "1..1" -- "0..*" Categoria : pertenece_a
-Producto "1..1" -- "0..1" Inventario : stock
+Producto "1..1" -- "0..1" Inventario : almacenado
 Producto "1..1" -- "0..*" Proveedor : suministrado_por
 
 Venta "1..1" -- "1..*" LineaDeVenta : compuesta_por
@@ -93,8 +105,10 @@ LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
 Cliente "1..1" -- "0..*" Venta : realiza
 Empleado "1..1" -- "0..*" Venta : procesa
 Caja "1..1" -- "0..*" Venta : registra
-Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 
+Venta "1..1"--"1..1" Impresion : solicita
+Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 Promocion "0..*" -- "0..*" Producto : aplica_a
+
 
 @enduml
