@@ -5,21 +5,18 @@ title Diagrama de Clases - Minimarket (con métodos completos)
 ' ==== CLASES ====
 
 class Producto {
-  - nombre : String
-  - precio : Money
-  - codigoBarra : String
+  - nombre : string
+  - precio : float
+  - codigoBarra : string
+  - categoria : string
   + cambiarPrecio(nuevo : float)
   + añadirProductoNuevo()
-}
-
-class Categoria {
-  - nombre : String
-  + agregarProducto(p : int)
-  + quitarProducto(p : int)
+  + agregarCategoria()
 }
 
 class Inventario {
   - cantidad : int
+  - categoria : string
   + descontar(cant : int)
   + reponer(cant : int)
   + verificarStock() : boolean
@@ -33,22 +30,24 @@ class Cliente {
 class Venta {
   - fecha : Date
   - total : float
+  - lineaVenta : String
   + aplicarMetodoPago(m : int)
   + procesarVenta() : boolean
+  + agregarLinea(l : string)
+  + eliminarLinea(l : string)
 }
 
 class LineaDeVenta {
   - cantidad : int
   - precioUnitario : float
   + actualizarCantidad(cant : int)
+  + actualizarPrecioUnitario (precioU : float)
 }
 
 class Empleado {
   - nombre : String
   - rol : String
   + registrarProductos(prod : int)
-  +inicioSesion() : boolean
-  +cierraSesion() : boolean
 }
 
 class Caja {
@@ -59,8 +58,6 @@ class Caja {
   + registraPago(amount : float)
   + calcularSubtotal() : float
   + calcularTotal() : float
-  + agregarLinea(l : string)
-  + eliminarLinea(l : string)
 }
 
 class Proveedor {
@@ -68,12 +65,15 @@ class Proveedor {
   - telefono : int
   + enviarProducto(p : Producto, cant : int)
   + recibirPago(amount : Money)
+  + recibirProducto() : int 
+  
 }
 
 class Promocion {
   - descripcion : String
   - descuento : double
   + aplicarDescuento(d : float)
+  + quitarDescuento(d : float)
   
 }
 
@@ -83,19 +83,27 @@ class MetodoDePago {
   + validar() : boolean
 }
 class Impresion {
-    - fechaHora : DateTime
-    - contenido : String
+    
+    '- contenido : String
     - nroTicket : int
-    - ventaAsociada : Venta
+    '- ventaAsociada : Venta
     - empleado : Empleado
-    + generarContenido(v : Venta)
+    + generarNroTicket () : int 
     + imprimirTicket() 
-    + guardarComprobante() 
+    
+}
+
+class Controlador {
+   
+   + inicioSesion() : boolean
+   + cierraSesion() : boolean
+   + guardarComprobante()
+
 }
 
 ' ==== RELACIONES ====
 
-Producto "1..1" -- "0..*" Categoria : pertenece_a
+'Producto "1..1" -- "0..*" Categoria : pertenece_a
 Producto "1..1" -- "0..1" Inventario : almacenado
 Producto "1..1" -- "0..*" Proveedor : suministrado_por
 
@@ -108,7 +116,7 @@ Caja "1..1" -- "0..*" Venta : registra
 
 Venta "1..1"--"1..1" Impresion : solicita
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
-Promocion "0..*" -- "0..*" Producto : aplica_a
-
-
+Promocion "0..*" -- "0..*" Venta : aplica_a
+Controlador "1..1" -- "1..1" Caja : supervisada
+'Inventario "1..1" -- " 1..n" Categoria : asds
 @enduml
