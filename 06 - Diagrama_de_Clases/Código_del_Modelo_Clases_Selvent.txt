@@ -23,7 +23,6 @@ class Inventario {
 }
 
 class Cliente {
-  - nombre : String
   + efectuaPago(mdp : int)
 }
 
@@ -31,10 +30,9 @@ class Venta {
   - fecha : Date
   - total : float
   - lineaVenta : String
-  + aplicarMetodoPago(m : int)
-  + procesarVenta() : boolean
-  + agregarLinea(l : string)
+  + agregarLineaVenta(l : string)
   + eliminarLinea(l : string)
+  + registraPago(mdp : int)
 }
 
 class LineaDeVenta {
@@ -42,10 +40,11 @@ class LineaDeVenta {
   - precioUnitario : float
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
+  + aplicarMetodoPago(m : int)
+
 }
 
 class Empleado {
-  - nombre : String
   - rol : String
   + registrarProductos(prod : int)
 }
@@ -60,17 +59,9 @@ class Caja {
   + calcularTotal() : float
 }
 
-class Proveedor {
-  - nombre : String
-  - telefono : int
-  + enviarProducto(p : Producto, cant : int)
-  + recibirPago(amount : Money)
-  + recibirProducto() : int 
-  
-}
 
 class Promocion {
-  - descripcion : String
+  - descripcion : string
   - descuento : double
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
@@ -80,13 +71,11 @@ class Promocion {
 class MetodoDePago {
   - tipo : int
   - detalles : String
-  + validar() : boolean
+  
 }
 class Impresion {
     
-    '- contenido : String
     - nroTicket : int
-    '- ventaAsociada : Venta
     - empleado : Empleado
     + generarNroTicket () : int 
     + imprimirTicket() 
@@ -98,14 +87,22 @@ class Controlador {
    + inicioSesion() : boolean
    + cierraSesion() : boolean
    + guardarComprobante()
+   + crearPago()
+   + validarPago() : boolean
 
 }
-
+class Persona{
+  - nombre : String
+  - telefono : int
+}
+class Proveedor {
+  - mail
+  + enviarProducto(p : Producto, cant : int)
+  + recibirPago(amount : float)
+}
 ' ==== RELACIONES ====
 
-'Producto "1..1" -- "0..*" Categoria : pertenece_a
 Producto "1..1" -- "0..1" Inventario : almacenado
-Producto "1..1" -- "0..*" Proveedor : suministrado_por
 
 Venta "1..1" -- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
@@ -118,5 +115,10 @@ Venta "1..1"--"1..1" Impresion : solicita
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 Promocion "0..*" -- "0..*" Venta : aplica_a
 Controlador "1..1" -- "1..1" Caja : supervisada
+Producto "1..1" -- "0..*" Proveedor : suministrado_por
+Empleado --|> Persona
+Cliente --|> Persona
+Proveedor --|> Persona
+
 'Inventario "1..1" -- " 1..n" Categoria : asds
 @enduml
