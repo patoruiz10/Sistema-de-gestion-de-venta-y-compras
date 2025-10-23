@@ -9,30 +9,33 @@ class Producto {
   - precio : float
   - codigoBarra : string
   - categoria : string
+  - cantidad : int
   + cambiarPrecio(nuevo : float)
   + añadirProductoNuevo()
   + agregarCategoria()
 }
 
-class Inventario {
-  - cantidad : int
-  - categoria : string
-  + descontar(cant : int)
-  + reponer(cant : int)
-  + verificarStock() : boolean
+class Categoría {
+    -nombre
+    
 }
 
 class Cliente {
-  + efectuaPago(mdp : int)
+    
 }
 
 class Venta {
   - fecha : Date
   - total : float
   - lineaVenta : String
+  - descuento
   + agregarLineaVenta(l : string)
   + eliminarLinea(l : string)
   + registraPago(mdp : int)
+  + calcularSubtotal() : float
+  + aplicarDescuento(d : float)
+  + quitarDescuento(d : float)
+
 }
 
 class LineaDeVenta {
@@ -41,12 +44,13 @@ class LineaDeVenta {
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
   + aplicarMetodoPago(m : int)
+  + calcularSubtotal() : float
+
 
 }
 
 class Empleado {
   - rol : String
-  + registrarProductos(prod : int)
 }
 
 class Caja {
@@ -55,17 +59,7 @@ class Caja {
   + abrir() : boolean
   + cerrar() : boolean
   + registraPago(amount : float)
-  + calcularSubtotal() : float
   + calcularTotal() : float
-}
-
-
-class Promocion {
-  - descripcion : string
-  - descuento : double
-  + aplicarDescuento(d : float)
-  + quitarDescuento(d : float)
-  
 }
 
 class MetodoDePago {
@@ -94,6 +88,7 @@ class Controlador {
 class Persona{
   - nombre : String
   - telefono : int
+  - dni : int
 }
 class Proveedor {
   - mail
@@ -102,18 +97,17 @@ class Proveedor {
 }
 ' ==== RELACIONES ====
 
-Producto "1..1" -- "0..1" Inventario : almacenado
+Producto "1..1" -- "1..1" Categoría : Pertenece a
 
 Venta "1..1" -- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
 
-Cliente "1..1" -- "0..*" Venta : realiza
+Cliente "1..1" -- "0..*" Venta : genera
 Empleado "1..1" -- "0..*" Venta : procesa
 Caja "1..1" -- "0..*" Venta : registra
 
 Venta "1..1"--"1..1" Impresion : solicita
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
-Promocion "0..*" -- "0..*" Venta : aplica_a
 Controlador "1..1" -- "1..1" Caja : supervisada
 Producto "1..1" -- "0..*" Proveedor : suministrado_por
 Empleado --|> Persona
