@@ -19,12 +19,11 @@ class Categoría {
     -nombre
     + eliminarProducto(p : Producto)
     + agregarProducto (p : Producto)
-    + buscarProductos()
 }
 
 class Cliente {
  - condicionIVA : string
- + realizaCompra(v : venta) 
+ + interactuar()
 }
 
 class Venta {
@@ -32,13 +31,15 @@ class Venta {
   - total : float
   - lineaVenta : String
   - descuento
-  + agregarLineaVenta(l : string)
-  + eliminarLinea(l : string)
-  + registraPago(mdp : int)
+  - pagos
+  + agregarDatos(Cliente)
+  + agregarLineaVenta(LineaDeVenta)
+  + eliminarLinea(LineaDeVenta)
+  + registraPagos(mdp : int)
   + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
-  + calcularTotal() : float
+  + calcularTotal(obtenerSubtotal , condicionIVA, descuento : float) : float
 }
 
 class LineaDeVenta {
@@ -46,17 +47,20 @@ class LineaDeVenta {
   - precioUnitario : float
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
-  + calcularSubtotal() : float
+  + calcularSubtotal(precioU : float , cant : int) : float
 }
 
 class Empleado {
   - rol : String
   + iniciaVenta(v : venta)
   + finalizaVenta() : boolean 
+  + interactuar()
 }
 
 class Caja {
   - numero : int
+  - monto: float
+  - estado: bool
   + registrarVenta() : boolean
   + abrir() : boolean
   + cerrar() : boolean
@@ -64,9 +68,7 @@ class Caja {
 
 class MetodoDePago {
   - tipo : int
-  - tipo2 : int
   - detalles : String
-  + procesarPago()
   + obtenerTipos()
 }
 class Impresion {
@@ -79,42 +81,43 @@ class Impresion {
 }
 
 class Controlador {
-   
-   + inicioSesion() : boolean
+   + inicioSesion(string) : boolean
    + cierraSesion() : boolean
-   + guardarComprobante()
-   + crearPago()
    + validarPago() : boolean
-   + añadirProducto()
-   + eliminarProducto()
-   + buscarProducto()
-   + actualizarStock()
+   + procesarPago()
+   + añadirProducto(p : Producto)
+   + eliminarProducto(p : Producto)
+   + buscarProducto(p : Producto)
+   + actualizarProducto(p : Producto)
+   + balance(m : monto)
+   + guardarComprobante(v : Venta)
+   + solicitarReabastecimiento()
 }
 class Persona{
   - nombre : String
   - telefono : int
   - dni : int
   + mostrarInfo()
-  + interactuar()*
+  + interactuar()
 }
 class Proveedor {
   - mail : string
   - cuit : int
-  + enviarLista()
+  + interactuar()
 }
 ' ==== RELACIONES ====
 
 Producto "1..1" -- "1..*" Categoría : Pertenece a
 
 Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
-LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
+LineaDeVenta "1..*" -- "1..1" Producto : refiere_a
 
 Cliente "1..1" -- "1..*" Venta : genera
 Empleado "1..1" -- "1..*" Venta : procesa
 Caja "1..1" -- "1..*" Venta : registra
 
 Venta "1..1" *-- "1..1" Impresion : solicita
-Venta "1..1" *-- "1..1" MetodoDePago : pagada_con
+Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 Controlador "1..1" -- "1..*" Caja : supervisada
 Producto "1..*" -- "1..*" Proveedor : suministrado_por
 Empleado --|> Persona
