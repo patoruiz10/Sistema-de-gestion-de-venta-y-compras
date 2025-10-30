@@ -6,22 +6,25 @@ title Diagrama de Clases - Minimarket (con métodos completos)
 
 class Producto {
   - nombre : string
-  - precio : float
-  - codigoBarra : string
+  - costo : float
+  - codigoBarra : int
   - categoria : string
   - cantidad : int
+  - precioUnitario : float
   + cambiarPrecio(nuevo : float)
-  + añadirProductoNuevo()
-  + agregarCategoria()
+  + asignarCategoria()
 }
 
 class Categoría {
     -nombre
-    
+    + eliminarProducto(p : Producto)
+    + agregarProducto (p : Producto)
+    + buscarProductos()
 }
 
 class Cliente {
-    
+ - condicionIVA : string
+ + realizaCompra(v : venta) 
 }
 
 class Venta {
@@ -32,10 +35,10 @@ class Venta {
   + agregarLineaVenta(l : string)
   + eliminarLinea(l : string)
   + registraPago(mdp : int)
-  + calcularSubtotal() : float
+  + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
-
+  + calcularTotal() : float
 }
 
 class LineaDeVenta {
@@ -43,14 +46,13 @@ class LineaDeVenta {
   - precioUnitario : float
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
-  + aplicarMetodoPago(m : int)
   + calcularSubtotal() : float
-
-
 }
 
 class Empleado {
   - rol : String
+  + iniciaVenta(v : venta)
+  + finalizaVenta() : boolean 
 }
 
 class Caja {
@@ -58,14 +60,14 @@ class Caja {
   + registrarVenta() : boolean
   + abrir() : boolean
   + cerrar() : boolean
-  + registraPago(amount : float)
-  + calcularTotal() : float
 }
 
 class MetodoDePago {
   - tipo : int
+  - tipo2 : int
   - detalles : String
-  
+  + procesarPago()
+  + obtenerTipos()
 }
 class Impresion {
     
@@ -83,36 +85,40 @@ class Controlador {
    + guardarComprobante()
    + crearPago()
    + validarPago() : boolean
-
+   + añadirProducto()
+   + eliminarProducto()
+   + buscarProducto()
+   + actualizarStock()
 }
 class Persona{
   - nombre : String
   - telefono : int
   - dni : int
+  + mostrarInfo()
+  + interactuar()*
 }
 class Proveedor {
-  - mail
-  + enviarProducto(p : Producto, cant : int)
-  + recibirPago(amount : float)
+  - mail : string
+  - cuit : int
+  + enviarLista()
 }
 ' ==== RELACIONES ====
 
-Producto "1..1" -- "1..1" Categoría : Pertenece a
+Producto "1..1" -- "1..*" Categoría : Pertenece a
 
-Venta "1..1" -- "1..*" LineaDeVenta : compuesta_por
+Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
 
-Cliente "1..1" -- "0..*" Venta : genera
-Empleado "1..1" -- "0..*" Venta : procesa
-Caja "1..1" -- "0..*" Venta : registra
+Cliente "1..1" -- "1..*" Venta : genera
+Empleado "1..1" -- "1..*" Venta : procesa
+Caja "1..1" -- "1..*" Venta : registra
 
-Venta "1..1"--"1..1" Impresion : solicita
-Venta "1..1" -- "1..*" MetodoDePago : pagada_con
-Controlador "1..1" -- "1..1" Caja : supervisada
-Producto "1..1" -- "0..*" Proveedor : suministrado_por
+Venta "1..1" *-- "1..1" Impresion : solicita
+Venta "1..1" *-- "1..1" MetodoDePago : pagada_con
+Controlador "1..1" -- "1..*" Caja : supervisada
+Producto "1..*" -- "1..*" Proveedor : suministrado_por
 Empleado --|> Persona
 Cliente --|> Persona
 Proveedor --|> Persona
 
-'Inventario "1..1" -- " 1..n" Categoria : asds
 @enduml
