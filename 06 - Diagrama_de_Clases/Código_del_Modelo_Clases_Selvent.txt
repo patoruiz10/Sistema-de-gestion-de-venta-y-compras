@@ -1,12 +1,16 @@
 @startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Minimarket (con métodos completos)
+title Diagrama de Clases - Minimarket (con mÃ©todos completos)
 
 ' ==== CLASES ====
 
 class Producto {
   - nombre : string
+<<<<<<< HEAD
   - costo : float
+=======
+  - precio : float
+>>>>>>> 7eba67fc74aba15bc8ddfa56e6bd3df5068af1cc
   - codigoBarra : int
   - categoria : string
   - cantidad : int
@@ -15,7 +19,7 @@ class Producto {
   + asignarCategoria()
 }
 
-class Categoría {
+class CategorÃ­a {
     -nombre
     + eliminarProducto(p : Producto)
     + agregarProducto (p : Producto)
@@ -67,7 +71,11 @@ class MetodoDePago {
   - tipo2 : int
   - detalles : String
   + procesarPago()
+<<<<<<< HEAD
   + obtenerTipos()
+=======
+  + obtenerTipo()
+>>>>>>> 7eba67fc74aba15bc8ddfa56e6bd3df5068af1cc
 }
 class Impresion {
     
@@ -85,7 +93,11 @@ class Controlador {
    + guardarComprobante()
    + crearPago()
    + validarPago() : boolean
+<<<<<<< HEAD
    + añadirProducto()
+=======
+   + aÃ±adirProducto()
+>>>>>>> 7eba67fc74aba15bc8ddfa56e6bd3df5068af1cc
    + eliminarProducto()
    + buscarProducto()
    + actualizarStock()
@@ -104,7 +116,11 @@ class Proveedor {
 }
 ' ==== RELACIONES ====
 
+<<<<<<< HEAD
 Producto "1..1" -- "1..*" Categoría : Pertenece a
+=======
+Producto "1..1" -- "1..*" CategorÃ­a : Pertenece a
+>>>>>>> 7eba67fc74aba15bc8ddfa56e6bd3df5068af1cc
 
 Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..1" -- "1..1" Producto : refiere_a
@@ -113,10 +129,17 @@ Cliente "1..1" -- "1..*" Venta : genera
 Empleado "1..1" -- "1..*" Venta : procesa
 Caja "1..1" -- "1..*" Venta : registra
 
+<<<<<<< HEAD
 Venta "1..1" *-- "1..1" Impresion : solicita
 Venta "1..1" *-- "1..1" MetodoDePago : pagada_con
 Controlador "1..1" -- "1..*" Caja : supervisada
 Producto "1..*" -- "1..*" Proveedor : suministrado_por
+=======
+Venta "1..1"--"1..1" Impresion : solicita
+Venta "1..1" -- "1..1" MetodoDePago : pagada_con
+Controlador "1..1" -- "1..*" Caja : supervisada
+Producto "1.." -- "1.." Proveedor : suministrado_por
+>>>>>>> 7eba67fc74aba15bc8ddfa56e6bd3df5068af1cc
 Empleado --|> Persona
 Cliente --|> Persona
 Proveedor --|> Persona
