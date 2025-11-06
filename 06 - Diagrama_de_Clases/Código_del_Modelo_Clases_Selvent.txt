@@ -17,13 +17,18 @@ class Producto {
 
 class Categoría {
     -nombre
+    - productos : List<Producto>
     + eliminarProducto(p : Producto)
     + agregarProducto (p : Producto)
 }
 
 class Cliente {
  - condicionIVA : string
- + interactuar()
+ - nombre : String
+ - telefono : int
+ - dni : int
+ + mostrarInfo()
+ + compra()
 }
 
 class Venta {
@@ -31,7 +36,8 @@ class Venta {
   - total : float
   - lineaVenta : String
   - descuento
-  - pagos
+  - pago
+  + agregarMetododePago(MetodoDePago)
   + agregarDatos(Cliente)
   + agregarLineaVenta(LineaDeVenta)
   + eliminarLinea(LineaDeVenta)
@@ -39,29 +45,33 @@ class Venta {
   + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
-  + calcularTotal(obtenerSubtotal , condicionIVA, descuento : float) : float
+  + calcularTotal(Subtotal , condicionIVA, descuento : float) : float
 }
 
 class LineaDeVenta {
   - cantidad : int
   - precioUnitario : float
+  - Subtotal : float
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
-  + calcularSubtotal(precioU : float , cant : int) : float
+  + calcularSubtotal() : float
 }
 
 class Empleado {
+  - nombre : String
+  - telefono : int
+  - dni : int
   - rol : String
-  + iniciaVenta(v : venta)
+  + mostrarInfo()
+  + iniciaVenta()
   + finalizaVenta() : boolean 
-  + interactuar()
 }
 
 class Caja {
   - numero : int
   - monto: float
   - estado: bool
-  + registrarVenta() : boolean
+  + balance()
   + abrir() : boolean
   + cerrar() : boolean
 }
@@ -69,15 +79,13 @@ class Caja {
 class MetodoDePago {
   - tipo : int
   - detalles : String
-  + obtenerTipos()
+  + obtenerTipo()
 }
 class Impresion {
-    
     - nroTicket : int
     - empleado : Empleado
     + generarNroTicket () : int 
-    + imprimirTicket() 
-    
+    + imprimirTicket()
 }
 
 class Controlador {
@@ -89,7 +97,6 @@ class Controlador {
    + eliminarProducto(p : Producto)
    + buscarProducto(p : Producto)
    + actualizarProducto(p : Producto)
-   + balance(m : monto)
    + guardarComprobante(v : Venta)
    + solicitarReabastecimiento()
 }
@@ -98,12 +105,17 @@ class Persona{
   - telefono : int
   - dni : int
   + mostrarInfo()
-  + interactuar()
 }
 class Proveedor {
   - mail : string
   - cuit : int
-  + interactuar()
+  - telefono : int
+  - direccion : String
+  
+  + mostrarInfo() : String
+  + contactar() : void
+  + registrarEntrega(fecha : Date) : void
+  
 }
 ' ==== RELACIONES ====
 
