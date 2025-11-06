@@ -12,7 +12,7 @@ class Producto {
   - cantidad : int
   - precioUnitario : float
   + cambiarPrecio(nuevo : float)
-  + asignarCategoria()
+  + asignarCategoria(Categoría)
 }
 
 class Categoría {
@@ -28,7 +28,7 @@ class Cliente {
  - telefono : int
  - dni : int
  + mostrarInfo()
- + compra()
+ + iniciaCompra()
 }
 
 class Venta {
@@ -41,7 +41,7 @@ class Venta {
   + agregarDatos(Cliente)
   + agregarLineaVenta(LineaDeVenta)
   + eliminarLinea(LineaDeVenta)
-  + registraPagos(mdp : int)
+  + registraPago(MetodoDePago)
   + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
@@ -63,13 +63,13 @@ class Empleado {
   - dni : int
   - rol : String
   + mostrarInfo()
-  + iniciaVenta()
+  + iniciaVenta() : boolean
   + finalizaVenta() : boolean 
 }
 
 class Caja {
   - numero : int
-  - monto: float
+  - saldoActual : float
   - estado: bool
   + balance()
   + abrir() : boolean
