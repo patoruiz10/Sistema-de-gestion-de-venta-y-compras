@@ -1,0 +1,97 @@
+@startuml
+!theme plain
+title Registrar Producto Nuevo - Selvent
+
+actor "Empleado" as Empleado
+
+participant "frm: FormularioProducto" as frm
+participant "cpv: ControladorProducto" as cpv
+participant "prod: Producto (Entidad)" as prod
+participant "cat: Categoria (Entidad)" as cat
+participant "alerta: VentanaAlerta" as alerta
+
+' -- Apertura del formulario --
+Empleado -> frm : abrirFormularioRegistrarProducto()
+activate frm
+frm --> Empleado : mostrarFormulario()
+' frm permanece activada mientras el usuario completa datos
+
+' -- Usuario completa campos --
+Empleado -> frm : completarCampos(ID, nombre, descripcion,\nproveedor, costo, precio, categoria, stockInicial)
+
+' -- Validación general (cliente y servidor unificadas) --
+frm -> frm : validarCampos()\n(ID obligatorio, formatos, precios >= 0)
+
+alt Validación falla
+    frm -> alerta : mostrar("Error: faltan campos o formato inválido")
+    activate alerta
+    alerta --> frm : mostrar("Error: faltan campos o formato inválido")
+    deactivate alerta
+    ' frm permanece activa esperando corrección: usuario corrige y vuelve a intentar
+
+else Validación OK
+    ' frm envía al controlador y se desactiva para esperar respuesta del servidor
+    frm -> cpv : submitRegistrarProducto(datosProducto, usuarioId)
+    deactivate frm
+
+    ' -- Procesamiento en servidor (cpv) --
+    activate cpv
+
+    ' -- Búsqueda del producto por ID en la clase Producto --
+    cpv -> prod : buscarProductoPorID(datosProducto.ID)
+    activate prod
+    alt Producto existente
+        prod --> cpv : productoEncontrado(productoPersistido)
+        deactivate prod
+
+        cpv -> alerta : mostrar("El ID del producto ya existe.")
+        activate alerta
+        alerta --> frm : mostrarAlerta("El ID del producto ya existe.")
+        deactivate alerta
+
+        cpv -> frm : volverAFormulario()
+        activate frm
+        frm --> Empleado : mostrarFormulario()
+        deactivate frm
+
+    else Producto no encontrado
+        prod --> cpv : noEncontrado()
+        deactivate prod
+
+        ' -- Crear instancia del producto (prod) --
+        cpv -> prod : crearInstancia(ID, nombre, descripcion,\nproveedor, costo, precio, stockInicial)
+        activate prod
+        prod --> cpv : instanciaProducto
+        deactivate prod
+
+        ' -- Asignar o crear categoría --
+        cpv -> cat : obtenerOCrearCategoria(nombreCategoria)
+        activate cat
+        alt Categoria existe
+            cat --> cpv : categoriaEncontrada
+        else Categoria creada
+            cat --> cpv : categoriaCreada
+        end
+        deactivate cat
+
+        ' -- Persistir producto mediante la clase prod --
+        cpv -> prod : guardar(instanciaProducto)
+        activate prod
+        prod --> cpv : guardadoOK
+        deactivate prod
+
+        ' -- Confirmación al usuario --
+        cpv -> alerta : mostrar("Producto registrado correctamente.")
+        activate alerta
+        alerta --> frm : mostrarAlerta("Producto registrado correctamente.")
+        deactivate alerta
+
+        cpv -> frm : actualizarFormularioPostRegistro()
+        deactivate cpv
+        activate frm
+        frm --> Empleado : mostrarInformacion()
+        deactivate frm
+    end
+end
+
+@enduml
