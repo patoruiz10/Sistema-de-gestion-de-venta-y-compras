@@ -1,0 +1,60 @@
+@startuml
+' Versión compatible con UML 2.5
+!theme plain
+title Diagrama de Secuencia: Cierre de Caja
+
+actor Encargado
+participant "UI: Interfaz del Sistema" as UI
+participant "Ctrl: ControladorCaja" as Ctrl
+participant "Gestor: SistemaVentas" as Ventas
+participant "Gestor: SistemaReporte" as Reporte
+participant "Alerta: VentanaAlerta" as Alerta
+
+' --- Inicio del proceso ---
+Encargado -> UI : seleccionarOpcion("Cierre de caja")
+activate UI
+UI -> Ctrl : iniciarProcesoCierre()
+activate Ctrl
+
+' --- Validación de sesión ---
+Ctrl -> UI : solicitarConfirmacion("¿Desea cerrar la caja?")
+UI -> Encargado : mostrarConfirmacion("¿Desea cerrar la caja?")
+Encargado -> UI : confirmarCierre()
+UI --> Ctrl : confirmacionRecibida()
+deactivate UI
+
+' --- Obtención de datos de ventas ---
+Ctrl -> Ventas : obtenerVentasDelDía()
+activate Ventas
+Ventas --> Ctrl : listaVentas
+deactivate Ventas
+
+' --- Cálculo y generación de reporte ---
+Ctrl -> Reporte : generarInformeDiario(listaVentas)
+activate Reporte
+Reporte --> Ctrl : informeCierre
+deactivate Reporte
+
+' --- Presentación del resultado ---
+Ctrl -> UI : mostrarResumen(informeCierre)
+activate UI
+UI -> Encargado : mostrarInforme(informeCierre)
+deactivate UI
+
+' --- Confirmación final ---
+Encargado -> UI : confirmarRecepcionInforme()
+activate UI
+UI --> Ctrl : cierreConfirmado()
+deactivate UI
+
+' --- Cierre exitoso ---
+Ctrl -> Alerta : mostrar("Cierre de caja completado con éxito")
+activate Alerta
+Alerta -> Encargado : mostrarMensaje("Cierre completado con éxito")
+Encargado -> Alerta : cerrarVentana()
+Alerta --> Ctrl : alertaCerrada()
+deactivate Alerta
+
+deactivate Ctrl
+
+@enduml
