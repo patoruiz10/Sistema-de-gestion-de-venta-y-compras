@@ -1,0 +1,52 @@
+@startuml
+title Diagrama de Secuencia: Consultar variación del stock 
+
+actor Encargado
+participant "Interfaz del Sistema" as UI
+participant "Controlador de Stock" as Ctrl
+participant "Gestor de Stock" as Gestor
+
+' --- Inicio ---
+Encargado -> UI : seleccionarOpcion("Consultar variación del stock")
+activate UI
+UI -> Ctrl : solicitarDatosStock()
+activate Ctrl
+Ctrl -> Gestor : obtenerExistenciasActuales()
+activate Gestor
+Gestor --> Ctrl : existenciasActuales
+Ctrl -> Gestor : obtenerExistenciasMesAnterior()
+Gestor --> Ctrl : existenciasMesAnterior
+Ctrl -> Gestor : obtenerCantidadMensualRequerida()
+Gestor --> Ctrl : cantidadMensualRequerida
+deactivate Gestor
+Ctrl -> UI : mostrarDatosStock(existenciasActuales, existenciasMesAnterior, cantidadMensualRequerida)
+deactivate Ctrl
+deactivate UI
+
+' --- Consulta de fecha ---
+Encargado -> UI : ingresarFechaConsulta(fecha)
+activate UI
+UI -> Ctrl : validarFecha(fecha)
+activate Ctrl
+
+alt Fecha futura
+    Ctrl -> UI : mostrarAlerta("La fecha ingresada es futura a la del día consultado")
+    deactivate UI
+    Ctrl -> UI : solicitarNuevaFecha()
+    note left
+      Retorna al paso 3 del flujo básico
+    end note
+else Fecha válida
+    Ctrl -> Gestor : obtenerVariacionStock(fecha)
+    activate Gestor
+    Gestor --> Ctrl : datosVariacionStock
+    deactivate Gestor
+
+    Ctrl -> UI : mostrarVariacionStock(datosVariacionStock)
+    deactivate UI
+end
+
+deactivate Ctrl
+
+@enduml
+

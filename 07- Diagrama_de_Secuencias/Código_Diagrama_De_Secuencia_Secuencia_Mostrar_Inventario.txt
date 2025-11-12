@@ -1,0 +1,28 @@
+@startuml
+title Diagrama de Secuencia: Mostrar inventario completo 
+
+actor Encargado
+participant "Interfaz del Sistema" as UI
+participant "Controlador de Inventario" as Ctrl
+participant "Gestor de Inventario" as Gestor
+
+' --- Inicio ---
+Encargado -> UI : seleccionarOpcion("Ver inventario completo")
+activate UI
+
+UI -> Ctrl : generarListadoInventario()
+activate Ctrl
+
+Ctrl -> Gestor : obtenerInventarioCompleto()
+activate Gestor
+
+Gestor --> Ctrl : listaProductos(ID, nombre, cantidad, precio, proveedor)
+deactivate Gestor
+
+Ctrl -> UI : mostrarInventario(listaProductos)
+deactivate Ctrl
+
+UI -> Encargado : visualizarInventario(listaProductos)
+deactivate UI
+
+@enduml
