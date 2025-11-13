@@ -1,4 +1,4 @@
-@startuml
+﻿@startuml
 ' Versión compatible con UML 2.5
 !theme plain
 title Diagrama de Secuencia: Cierre de Caja
@@ -49,12 +49,12 @@ deactivate UI
 
 ' --- Cierre exitoso ---
 Ctrl -> Alerta : mostrar("Cierre de caja completado con éxito")
+deactivate Ctrl
 activate Alerta
-Alerta -> Encargado : mostrarMensaje("Cierre completado con éxito")
+Alerta --> Encargado : mostrarMensaje("Cierre completado con éxito")
 Encargado -> Alerta : cerrarVentana()
 Alerta --> Ctrl : alertaCerrada()
 deactivate Alerta
 
-deactivate Ctrl
 
 @enduml
