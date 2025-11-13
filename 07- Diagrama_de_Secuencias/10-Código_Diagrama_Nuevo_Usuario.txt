@@ -1,4 +1,4 @@
-@startuml
+﻿@startuml
 ' Versión 2.5 - Diagrama de secuencia: Crear un nuevo usuario
 
 actor Encargado
@@ -6,7 +6,8 @@ participant "Interfaz Usuario" as IU
 participant "Sistema" as Sistema
 participant "Controlador" as Controlador
 
-Encargado -> IU : Selecciona tipo de usuario y completa datos
+Encargado -> IU : enviarDatos(nombre, contraseña, tipoUsuario)
+activate Sistema
 activate IU
 
 IU -> Sistema : enviarDatos(nombre, contraseña, tipoUsuario)
