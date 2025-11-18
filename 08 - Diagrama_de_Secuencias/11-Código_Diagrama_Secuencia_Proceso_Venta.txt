@@ -1,91 +1,151 @@
 @startuml
-title Proceso de Venta
+!theme plain
+title Proceso de Venta - SELVENT
 
 actor Empleado
 
-participant "frm: FormularioVenta" as frm
-participant "cpv: ControladorVenta" as cpv
-participant "prod: Producto (Entidad)" as prod
-participant "venta: Venta (Entidad)" as venta
-participant "pago: MetodoPago (Entidad)" as pago
-participant "alerta: VentanaAlerta" as alerta
+participant Controlador
+participant Caja
+participant Venta
+participant LineaDeVenta
+participant Producto
+participant MetodoDePago
+participant Impresion
 
-Empleado -> frm : iniciaProcesoVenta()
-activate frm
-frm -> Empleado : mostrarFormularioVenta()
+'===========================================================
+' INICIO DEL PROCESO DE VENTA
+'===========================================================
 
-loop Cargar productos
-    Empleado -> frm : ingresarCodigoProducto(codigo)
-    frm -> cpv : buscarProductoPorID(codigo)
-    activate cpv
-    cpv -> prod : buscarProductoPorID(codigo)
-    activate prod
-    alt Producto no encontrado
-        prod --> cpv : noEncontrado()
-        deactivate prod
-        cpv -> alerta : mostrarAlerta("Código inexistente.")
-        activate alerta
-        alerta --> frm : mostrar("Código inexistente.")
-        deactivate alerta
-        frm -> Empleado : solicitarNuevoCodigo()
+Empleado -> Controlador : iniciarVenta()
+activate Controlador
+
+Controlador -> Venta : agregarDatos(Cliente)
+activate Venta
+Venta --> Controlador : <<"Venta iniciada":string>>
+deactivate Venta
+
+'===========================================================
+' CARGA DE PRODUCTOS
+'===========================================================
+
+loop "Cargar productos mientras el usuario desee agregar"
+    Empleado -> Controlador : ingresarCodigoProducto(codigo)
+
+    Controlador -> Producto : obtenerCodigo(codigo)
+    activate Producto
+
+    alt Código de producto inexistente
+        Producto --> Controlador : <<"Código inexistente, vuelva a ingresar":string>>
+
+        Controlador --> Empleado : <<"Código inexistente, vuelva a ingresar":string>>
+
     else Producto encontrado
-        prod --> cpv : productoEncontrado(datosProducto)
-        deactivate prod
-        cpv -> frm : agregarProducto(datosProducto)
-        deactivate cpv
-        frm -> frm : actualizarListado()
-    end
+        Producto --> Controlador : <<producto>>
+        deactivate Producto
 
+        ' El usuario ingresa la cantidad deseada
+        Empleado -> Controlador : ingresarCantidad(cant)
+
+        Controlador -> LineaDeVenta : actualizarCantidad(cant : int)
+        activate LineaDeVenta
+        LineaDeVenta --> Controlador : <<cant>>
+
+        Controlador -> LineaDeVenta : actualizarPrecioUnitario(precioU : float)
+        LineaDeVenta --> Controlador : <<precioU>>
+
+        Controlador -> LineaDeVenta : calcularSubtotal()
+        LineaDeVenta --> Controlador : <<subtotal>>
+        deactivate LineaDeVenta
+
+        Controlador -> Venta : agregarLineaVenta(LineaDeVenta)
+        activate Venta
+        Venta --> Controlador : <<"Línea de venta agregada":string>>
+        deactivate Venta
+
+        Controlador --> Empleado : <<"Producto agregado a la venta":string>>
+    end
 end
 
-frm -> cpv : calcularTotal()
-activate cpv
-cpv -> venta : obtenerTotal()
-activate venta
-venta --> cpv : totalCalculado(montoTotal)
-deactivate venta
-cpv -> frm : mostrarTotal(montoTotal)
-deactivate cpv
+'===========================================================
+' CÁLCULO DEL TOTAL
+'===========================================================
 
-frm -> cpv : seleccionarMetodoPago(metodo)
-activate cpv
-cpv -> pago : procesarMetodoPago(metodo)
-activate pago
-pago -> pago : validarMetodo(metodo)
-alt Método no disponible
-    pago --> cpv : metodoNoDisponible()
-    deactivate pago
-    cpv -> alerta : mostrarAlerta("Método de pago no disponible.")
-    activate alerta
-    alerta --> frm : mostrar("Método de pago no disponible.")
-    deactivate alerta
-    frm -> Empleado : seleccionarOtroMetodo()
-else Método válido
-    pago --> cpv : metodoValido()
-    deactivate pago
-    cpv -> venta : registrarVenta()
-    activate venta
+Empleado -> Controlador : solicitarTotal()
+Controlador -> Venta : calcularTotal()
+activate Venta
+Venta --> Controlador : <<total>>
+deactivate Venta
+
+Controlador --> Empleado : <<total>>
+
+'===========================================================
+' SELECCIÓN Y VALIDACIÓN DEL MÉTODO DE PAGO
+'===========================================================
+
+Empleado -> Controlador : seleccionarMetodoPago(tipoMetodo)
+
+Controlador -> MetodoDePago : obtenerTipo()
+activate MetodoDePago
+MetodoDePago --> Controlador : <<tipoMetodo>>
+
+alt Método de pago no disponible
+    deactivate MetodoDePago
+    Controlador --> Empleado : <<"Método de pago no disponible":string>>
+
+else Método de pago disponible
+    deactivate MetodoDePago
+
+    Controlador -> Venta : registrarPago(MetodoDePago)
+    activate Venta
+
     alt Fondos insuficientes
-        venta --> cpv : errorFondos()
-        deactivate venta
-        cpv -> alerta : mostrarAlerta("No es posible efectuar el pago.")
-        activate alerta
-        alerta --> frm : mostrar("No es posible efectuar el pago.")
-        deactivate alerta
-        frm -> Empleado : seleccionarOtroMetodo()
-    else Pago exitoso
-        venta --> cpv : ventaRegistrada()
-        deactivate venta
-        cpv -> alerta : mostrarAlerta("Venta concretada correctamente.")
-        activate alerta
-        alerta --> frm : mostrar("Venta concretada correctamente.")
-        deactivate alerta
-        frm -> frm : limpiarCamposYActualizar()
+        Venta --> Controlador : <<"No es posible efectuar el pago":string>>
+
+        Controlador --> Empleado : <<"No es posible efectuar el pago":string>>
+
+    else Proceso de pago cancelado
+        Venta --> Controlador : <<"Proceso de pago cancelado":string>>
+
+        Controlador --> Empleado : <<"Proceso de pago cancelado":string>>
+
+    else Pago aceptado
+        Venta --> Controlador : <<"Pago registrado":string>>
+        deactivate Venta
+
+        '=========================
+        ' Actualización de caja
+        '=========================
+        Controlador -> Caja : balance()
+        activate Caja
+        Caja --> Controlador : <<saldoActual>>
+        deactivate Caja
+
+        '=========================
+        ' Actualización de stock
+        '=========================
+        Controlador -> Producto : actualizarProducto(p : Producto)
+        activate Producto
+        Producto --> Controlador : <<"Stock actualizado":string>>
+        deactivate Producto
+
+        '=========================
+        ' Generación y guardado de comprobante digital
+        '=========================
+        Controlador -> Impresion : generarNroTicket()
+        activate Impresion
+        Impresion --> Controlador : <<nroTicket>>
+        deactivate Impresion
+
+        Controlador -> Impresion : guardarComprobante(Venta, nroTicket)
+        activate Impresion
+        Impresion --> Controlador : <<"Comprobante guardado":string>>
+        deactivate Impresion
+
+        Controlador --> Empleado : <<"Venta registrada correctamente":string>>
+        deactivate Controlador
     end
 end
-deactivate cpv
 
-frm -> Empleado : mostrarTicketConfirmacion()
-deactivate frm
+
 
 @enduml

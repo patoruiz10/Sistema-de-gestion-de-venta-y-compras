@@ -5,12 +5,14 @@ title Diagrama de Clases - Minimarket (con métodos completos)
 ' ==== CLASES ====
 
 class Producto {
+  - codigo : int
   - nombre : string
   - costo : float
   - codigoBarra : int
   - categoria : string
   - cantidad : int
   - precioUnitario : float
+  + obtenerCodigo (int)
   + cambiarPrecio(nuevo : float)
   + asignarCategoria(Categoría)
 }
@@ -18,6 +20,7 @@ class Producto {
 class Categoría {
     -nombre
     - productos : List<Producto>
+    + crearCategoria(nombre)
     + eliminarProducto(p : Producto)
     + agregarProducto (p : Producto)
 }
@@ -27,6 +30,7 @@ class Cliente {
  - nombre : String
  - telefono : int
  - dni : int
+ + crearCliente(nombre,telefono,dni,condicionIVA)
  + mostrarInfo()
  + iniciaCompra()
 }
@@ -45,7 +49,7 @@ class Venta {
   + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
-  + calcularTotal(Subtotal , condicionIVA, descuento : float) : float
+  + calcularTotal() : float
 }
 
 class LineaDeVenta {
@@ -59,9 +63,13 @@ class LineaDeVenta {
 
 class Empleado {
   - nombre : String
+  - usuario : String
+  - contraseña : String
   - telefono : int
   - dni : int
   - rol : String
+  + introducirCredenciales(usuario,contraseña)
+  + crearEmpleado(usuario,contraseña,rol)
   + mostrarInfo()
   + iniciaVenta() : boolean
   + finalizaVenta() : boolean 
@@ -72,8 +80,8 @@ class Caja {
   - saldoActual : float
   - estado: bool
   + balance()
-  + abrir() : boolean
-  + cerrar() : boolean
+  + abrirCaja() : boolean
+  + cerrarCaja() : boolean
 }
 
 class MetodoDePago {
@@ -85,7 +93,6 @@ class Impresion {
     - nroTicket : int
     - empleado : Empleado
     + generarNroTicket () : int 
-    + imprimirTicket()
 }
 
 class Controlador {
@@ -99,11 +106,19 @@ class Controlador {
    + actualizarProducto(p : Producto)
    + guardarComprobante(v : Venta)
    + solicitarReabastecimiento()
+   + validarCredenciales()
+   + registrarCierre()
+   + generarInformeDiario()
+   + ingresarCodigoProducto(codigo : int)
+   + calcularTotal()
+   + ingresarCantidad(cant : int)
+   + seleccionarMetodoPago(tipoMetodo : int)
 }
 class Persona{
   - nombre : String
   - telefono : int
   - dni : int
+  + crearPersona()
   + mostrarInfo()
 }
 class Proveedor {
@@ -111,7 +126,7 @@ class Proveedor {
   - cuit : int
   - telefono : int
   - direccion : String
-  
+  + crearProveedor(nombre,telefono,cuit,mail,direccion)
   + mostrarInfo() : String
   + contactar() : void
   + registrarEntrega(fecha : Date) : void
