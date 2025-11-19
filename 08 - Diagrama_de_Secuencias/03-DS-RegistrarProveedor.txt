@@ -1,0 +1,69 @@
+@startuml
+!theme plain
+title Registrar Proveedor Nuevo - SELVENT
+
+actor Empleado
+
+participant Controlador
+participant Proveedor
+
+'===========================================================
+' INICIO DEL REGISTRO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionRegistrarProveedor()
+activate Controlador
+
+Controlador --> Empleado : <<"Mostrar formulario de proveedor":string>>
+deactivate Controlador
+'===========================================================
+' USUARIO COMPLETA FORMULARIO Y PRESIONA GUARDAR
+'===========================================================
+
+Empleado -> Controlador : registrarProveedor(nombre, telefono, cuit, mail, direccion)
+activate Controlador
+'===========================================================
+' VALIDACIÓN DE CAMPOS VACÍOS
+'===========================================================
+
+alt Algún campo obligatorio está vacío
+    Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
+
+else Todos los campos completos
+
+    '===========================================================
+    ' VALIDACIÓN DE CUIT (PROVEEDOR EXISTENTE)
+    '===========================================================
+    Controlador -> Proveedor : obtenerProveedor(cuit)
+    activate Proveedor
+
+    alt Proveedor ya registrado
+        Proveedor --> Controlador : <<"Proveedor existente":string>>
+        
+
+        Controlador --> Empleado : <<"El CUIT ingresado ya corresponde a un proveedor existente":string>>
+
+    else CUIT disponible
+        Proveedor --> Controlador : <<"Proveedor no encontrado":string>>
+        deactivate Proveedor
+
+        '===================================================
+        ' CREACIÓN DEL NUEVO PROVEEDOR (NUEVA ENTIDAD)
+        '===================================================
+        create "proveedorNuevo : Proveedor" as proveedorNuevo
+        Controlador --> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
+        
+        proveedorNuevo --> Controlador : <<proveedor>>
+        
+
+        '===================================================
+        ' CONFIRMACIÓN DE REGISTRO
+        '===================================================
+        Controlador --> Empleado : <<"Proveedor registrado correctamente":string>>
+        deactivate Controlador
+    end
+end
+
+
+
+@enduml

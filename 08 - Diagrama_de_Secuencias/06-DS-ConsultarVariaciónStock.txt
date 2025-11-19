@@ -1,0 +1,69 @@
+﻿@startuml
+!theme plain
+title Consultar Variación del Stock - SELVENT (v2.5)
+
+actor Empleado
+participant Controlador
+participant Producto
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionConsultarVariacionStock()
+activate Controlador
+
+'===========================================================
+' OBTENER DATOS ACTUALES Y ANTERIORES
+'===========================================================
+
+Controlador -> Producto : obtenerCantidad()
+activate Producto
+Producto --> Controlador : <<existenciasActuales>>
+deactivate Producto
+
+Controlador -> Producto : obtenerCantidadEnFecha(fechaMesAnterior)
+activate Producto
+Producto --> Controlador : <<existenciasMesAnterior>>
+deactivate Producto
+
+Controlador -> Producto : obtenerCantidadRequerida()
+activate Producto
+Producto --> Controlador : <<cantidadMensualRequerida>>
+deactivate Producto
+
+Controlador --> Empleado : <<"Mostrar datos de stock actual y mes anterior":string>>
+deactivate Controlador
+'===========================================================
+' INGRESO DE FECHA
+'===========================================================
+
+Empleado -> Controlador : consultarVariacionStock(fecha)
+activate Controlador
+
+'===========================================================
+' VALIDACIÓN DE FECHA (SIN AUTO LLAMADO)
+'===========================================================
+
+' Validación interna realizada por el Controlador (sin autollamado)
+
+alt Fecha futura
+    Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
+    Controlador --> Empleado : <<"Ingrese una nueva fecha":string>>
+
+else Fecha válida
+
+    '=======================================================
+    ' OBTENER VARIACIÓN SEGÚN FECHA
+    '=======================================================
+    Controlador -> Producto : obtenerCantidadEnFecha(fecha)
+    activate Producto
+    Producto --> Controlador : <<cantidadEnFecha>>
+    deactivate Producto
+
+    ' Controlador calcula variación internamente
+
+    Controlador --> Empleado : <<variacionStock, "Variación de stock mostrada correctamente":string>>
+    deactivate Controlador
+end
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+!theme plain
+title Crear Pedido de Stock - SELVENT (v2.5)
+
+actor Encargado
+participant Controlador
+participant Producto
+participant Proveedor
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Encargado -> Controlador : seleccionarOpcionCrearPedidoStock()
+activate Controlador
+
+
+
+'===========================================================
+' OBTENER STOCK ACTUAL Y REQUERIDO
+'===========================================================
+
+Controlador -> Producto : obtenerCantidad()
+activate Producto
+Producto --> Controlador : <<cantidadActual>>
+deactivate Producto
+
+Controlador -> Producto : obtenerCantidadRequerida()
+activate Producto
+Producto --> Controlador : <<cantidadRequerida>>
+deactivate Producto
+Controlador --> Encargado : <<"Mostrar formulario de pedido de stock":string>>
+' Controlador calcula faltantes
+'===========================================================
+' MODIFICACIÓN DEL PEDIDO POR EL USUARIO
+'===========================================================
+'===========================================================
+' VALIDACIÓN
+'===========================================================
+opt No hay productos con faltante
+    Controlador --> Encargado : <<"No existen productos con faltante de stock":string>>
+    Controlador --> Encargado : <<"Ingrese nuevas cantidades":string>>
+    deactivate Controlador    
+end
+
+    Encargado -> Controlador : modificarCantidades(productosModificados)
+    activate Controlador
+    '=======================================================
+    ' GENERAR PEDIDO
+    '=======================================================
+    Controlador -> Proveedor : obtenerProveedor(cuit)
+    activate Proveedor
+    Proveedor --> Controlador : <<proveedor>>
+    deactivate Proveedor
+
+    ' Crear pedido (conceptual, no existe clase Pedido)
+    Controlador --> Encargado : <<productosAReponer ,cantidadesAReponer ,proveedoresAsociados , "Pedido generado correctamente":string>>
+    deactivate Controlador
+
+@enduml

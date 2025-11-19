@@ -1,28 +1,33 @@
 @startuml
-title Diagrama de Secuencia: Mostrar inventario completo 
+!theme plain
+title Mostrar Inventario Completo - SELVENT
 
-actor Encargado
-participant "Interfaz del Sistema" as UI
-participant "Controlador de Inventario" as Ctrl
-participant "Gestor de Inventario" as Gestor
+actor Empleado
+participant Controlador
+participant Producto
 
-' --- Inicio ---
-Encargado -> UI : seleccionarOpcion("Ver inventario completo")
-activate UI
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
 
-UI -> Ctrl : generarListadoInventario()
-activate Ctrl
+Empleado -> Controlador : seleccionarOpcionMostrarInventario()
+activate Controlador
 
-Ctrl -> Gestor : obtenerInventarioCompleto()
-activate Gestor
+'===========================================================
+' OBTENER LISTA DE PRODUCTOS
+'===========================================================
 
-Gestor --> Ctrl : listaProductos(ID, nombre, cantidad, precio, proveedor)
-deactivate Gestor
+Controlador -> Producto : obtenerTodosLosProductos()
+activate Producto
+Producto --> Controlador : <<listaProductos>>
+deactivate Producto
 
-Ctrl -> UI : mostrarInventario(listaProductos)
-deactivate Ctrl
+'===========================================================
+' MOSTRAR INVENTARIO AL USUARIO
+'===========================================================
 
-UI -> Encargado : visualizarInventario(listaProductos)
-deactivate UI
+Controlador --> Empleado : <<listaProductos, "Inventario mostrado correctamente":string>>
+
+deactivate Controlador
 
 @enduml

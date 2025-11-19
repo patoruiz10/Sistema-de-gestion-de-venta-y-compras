@@ -1,0 +1,108 @@
+@startuml
+!theme plain
+title Registrar Producto Nuevo - Selvent
+
+actor Empleado
+
+participant Controlador
+participant Producto
+participant Proveedor
+participant Categoria
+
+'===========================================================
+' INICIO DEL REGISTRO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionAñadirProducto()
+activate Controlador
+
+Controlador --> Empleado : <<"Mostrar formulario de nuevo producto":string>>
+
+'===========================================================
+' USUARIO COMPLETA FORMULARIO Y PRESIONA GUARDAR
+'===========================================================
+
+Empleado -> Controlador : añadirProducto(codigo, descripcion, cantidad, costo, cuit, nombreCategoria)
+
+'===========================================================
+' VALIDACIÓN UNIFICADA DE CAMPOS VACÍOS
+'===========================================================
+
+alt Algún campo obligatorio está vacío
+    Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
+
+else Todos los campos completos
+
+    '===========================================================
+    ' VALIDACIÓN DEL CODIGO
+    '===========================================================
+    Controlador -> Producto : obtenerCodigo(codigo)
+    activate Producto
+
+    alt codigo repetido
+        Producto --> Controlador : <<"codigo del producto ya existente":string>>
+        
+
+        Controlador --> Empleado : <<"El codigo del producto ingresado ya existe":string>>
+
+    else codigo disponible
+        Producto --> Controlador : <<"codigo disponible":string>>
+        deactivate Producto
+
+        '===================================================
+        ' OBTENER PROVEEDOR SELECCIONADO
+        '===================================================
+        Controlador -> Proveedor : obtenerProveedor(cuit)
+        activate Proveedor
+
+        alt Proveedor inexistente
+            Proveedor --> Controlador : <<"Proveedor no encontrado":string>>
+
+            Controlador --> Empleado : <<"El proveedor seleccionado no existe":string>>
+
+        else Proveedor válido
+            Proveedor --> Controlador : <<proveedor>>
+            deactivate Proveedor
+
+            '===================================================
+            ' OBTENER CATEGORÍA SELECCIONADA
+            '===================================================
+            Controlador -> Categoria : obtenerCategoria(nombreCategoria)
+            activate Categoria
+
+            alt Categoria inexistente
+                Categoria --> Controlador : <<"Categoría no encontrada":string>>
+
+                Controlador --> Empleado : <<"La categoría seleccionada no existe":string>>
+
+            else Categoria válida
+                Categoria --> Controlador : <<categoria>>
+                deactivate Categoria
+
+                '===================================================
+                ' CREAR OBJETO PRODUCTO (NUEVA ENTIDAD)
+                '===================================================
+                create "productoNuevo: Producto" as productoNuevo
+                Controlador --> productoNuevo : crearProducto(codigo, descripcion, cantidad, costo, proveedor, nombreCategoria)
+          
+
+            
+
+                '===================================================
+                ' AGREGAR PRODUCTO A LA CATEGORÍA
+                '===================================================
+                Controlador -> Categoria : agregarProducto(producto)
+                activate Categoria
+                Categoria --> Controlador : <<"Producto agregado a la categoría":string>>
+                deactivate Categoria
+
+                Controlador --> Empleado : <<"Producto registrado correctamente":string>>
+                deactivate Controlador
+            end
+        end
+    end
+end
+
+
+
+@enduml

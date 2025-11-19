@@ -34,10 +34,10 @@ loop "Cargar productos mientras el usuario desee agregar"
     Controlador -> Producto : obtenerCodigo(codigo)
     activate Producto
 
-    alt C骴igo de producto inexistente
-        Producto --> Controlador : <<"C骴igo inexistente, vuelva a ingresar":string>>
+    alt C贸digo de producto inexistente
+        Producto --> Controlador : <<"C贸digo inexistente, vuelva a ingresar":string>>
 
-        Controlador --> Empleado : <<"C骴igo inexistente, vuelva a ingresar":string>>
+        Controlador --> Empleado : <<"C贸digo inexistente, vuelva a ingresar":string>>
 
     else Producto encontrado
         Producto --> Controlador : <<producto>>
@@ -59,7 +59,7 @@ loop "Cargar productos mientras el usuario desee agregar"
 
         Controlador -> Venta : agregarLineaVenta(LineaDeVenta)
         activate Venta
-        Venta --> Controlador : <<"L韓ea de venta agregada":string>>
+        Venta --> Controlador : <<"L铆nea de venta agregada":string>>
         deactivate Venta
 
         Controlador --> Empleado : <<"Producto agregado a la venta":string>>
@@ -67,7 +67,7 @@ loop "Cargar productos mientras el usuario desee agregar"
 end
 
 '===========================================================
-' C罫CULO DEL TOTAL
+' C脕LCULO DEL TOTAL
 '===========================================================
 
 Empleado -> Controlador : solicitarTotal()
@@ -79,7 +79,7 @@ deactivate Venta
 Controlador --> Empleado : <<total>>
 
 '===========================================================
-' SELECCI覰 Y VALIDACI覰 DEL M蒚ODO DE PAGO
+' SELECCI脫N Y VALIDACI脫N DEL M脡TODO DE PAGO
 '===========================================================
 
 Empleado -> Controlador : seleccionarMetodoPago(tipoMetodo)
@@ -88,11 +88,11 @@ Controlador -> MetodoDePago : obtenerTipo()
 activate MetodoDePago
 MetodoDePago --> Controlador : <<tipoMetodo>>
 
-alt M閠odo de pago no disponible
+alt M茅todo de pago no disponible
     deactivate MetodoDePago
-    Controlador --> Empleado : <<"M閠odo de pago no disponible":string>>
+    Controlador --> Empleado : <<"M茅todo de pago no disponible":string>>
 
-else M閠odo de pago disponible
+else M茅todo de pago disponible
     deactivate MetodoDePago
 
     Controlador -> Venta : registrarPago(MetodoDePago)
@@ -113,7 +113,7 @@ else M閠odo de pago disponible
         deactivate Venta
 
         '=========================
-        ' Actualizaci髇 de caja
+        ' Actualizaci贸n de caja
         '=========================
         Controlador -> Caja : balance()
         activate Caja
@@ -121,7 +121,7 @@ else M閠odo de pago disponible
         deactivate Caja
 
         '=========================
-        ' Actualizaci髇 de stock
+        ' Actualizaci贸n de stock
         '=========================
         Controlador -> Producto : actualizarProducto(p : Producto)
         activate Producto
@@ -129,7 +129,7 @@ else M閠odo de pago disponible
         deactivate Producto
 
         '=========================
-        ' Generaci髇 y guardado de comprobante digital
+        ' Generaci贸n y guardado de comprobante digital
         '=========================
         Controlador -> Impresion : generarNroTicket()
         activate Impresion

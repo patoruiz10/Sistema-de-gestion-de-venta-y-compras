@@ -1,0 +1,47 @@
+﻿@startuml
+!theme plain
+title Diagrama de Secuencia - Crear nuevo usuario
+
+actor Empleado
+participant Controlador
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionCrearNuevoUsuario()
+activate Controlador
+
+Controlador --> Empleado : <<"Mostrar formulario de nuevo usuario":string>>
+deactivate Controlador
+'===========================================================
+' INGRESO DE DATOS
+'===========================================================
+
+Empleado -> Controlador : crearNuevoUsuario(usuario, contraseña, rol)
+activate Controlador
+'===========================================================
+' VALIDACIÓN DE CAMPOS VACÍOS
+'===========================================================
+
+alt Campos vacíos
+    Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
+
+else Campos válidos
+
+    '=======================================================
+    ' CREACIÓN DEL NUEVO EMPLEADO
+    '=======================================================
+    create nuevoEmpleado
+    Controlador -> nuevoEmpleado : crearEmpleado(usuario, contraseña, rol)
+    activate nuevoEmpleado
+    nuevoEmpleado --> Controlador : <<empleado>>
+    deactivate nuevoEmpleado
+
+    Controlador --> Empleado : <<"Usuario creado correctamente":string>>
+    deactivate Controlador
+end
+
+
+
+@enduml
