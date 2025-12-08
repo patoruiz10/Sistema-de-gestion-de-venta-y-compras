@@ -13,7 +13,7 @@ participant Venta
 Empleado -> Controlador : seleccionarOpcionHistorialVentas()
 activate Controlador
 
-Controlador --> Empleado : <<"Mostrar opciones de consulta (día, semana, mes)":string>>
+Controlador --> Empleado : <<null>>
 deactivate Controlador
 '===========================================================
 ' USUARIO INGRESA FECHA

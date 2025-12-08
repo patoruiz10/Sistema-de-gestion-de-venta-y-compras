@@ -3,29 +3,27 @@
 title Registrar Proveedor Nuevo - SELVENT
 
 actor Empleado
-
 participant Controlador
 participant Proveedor
+participant "<<multiobjeto>> proveedores : Proveedor" as proveedores
 
 '===========================================================
 ' INICIO DEL REGISTRO
 '===========================================================
-
 Empleado -> Controlador : seleccionarOpcionRegistrarProveedor()
 activate Controlador
-
-Controlador --> Empleado : <<"Mostrar formulario de proveedor":string>>
+Controlador --> Empleado : <<null>>
 deactivate Controlador
+
 '===========================================================
 ' USUARIO COMPLETA FORMULARIO Y PRESIONA GUARDAR
 '===========================================================
-
 Empleado -> Controlador : registrarProveedor(nombre, telefono, cuit, mail, direccion)
 activate Controlador
+
 '===========================================================
 ' VALIDACIÓN DE CAMPOS VACÍOS
 '===========================================================
-
 alt Algún campo obligatorio está vacío
     Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
 
@@ -50,11 +48,16 @@ else Todos los campos completos
         '===================================================
         ' CREACIÓN DEL NUEVO PROVEEDOR (NUEVA ENTIDAD)
         '===================================================
-        create "proveedorNuevo : Proveedor" as proveedorNuevo
-        Controlador --> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
-        
-        proveedorNuevo --> Controlador : <<proveedor>>
-        
+        create proveedorNuevo
+        Controlador -> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
+
+        '===================================================
+        ' AGREGAR A LA COLECCIÓN DE PROVEEDORES
+        '===================================================
+        Controlador -> proveedores : agregarProveedor(proveedorNuevo : Proveedor)
+        activate proveedores
+        proveedores --> Controlador : <<null>>
+        deactivate proveedores
 
         '===================================================
         ' CONFIRMACIÓN DE REGISTRO
@@ -63,7 +66,6 @@ else Todos los campos completos
         deactivate Controlador
     end
 end
-
 
 
 @enduml

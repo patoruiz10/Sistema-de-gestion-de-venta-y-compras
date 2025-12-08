@@ -25,6 +25,11 @@ deactivate Producto
 Controlador -> Producto : obtenerCantidadEnFecha(fechaMesAnterior)
 activate Producto
 Producto --> Controlador : <<existenciasMesAnterior>>
+note right of Producto
+    obtenerCantidadEnFecha(fecha)
+    consulta el historial de movimientos
+    de ese producto
+end note
 deactivate Producto
 
 Controlador -> Producto : obtenerCantidadRequerida()
@@ -66,4 +71,7 @@ else Fecha válida
     Controlador --> Empleado : <<variacionStock, "Variación de stock mostrada correctamente":string>>
     deactivate Controlador
 end
+    note right of Empleado
+        variacionStock = cantidadMensualRequerida - cantidadEnFecha
+end note
 @enduml

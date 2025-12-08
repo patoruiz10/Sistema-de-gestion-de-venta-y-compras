@@ -2,7 +2,7 @@
 !theme plain
 title Crear Pedido de Stock - SELVENT (v2.5)
 
-actor Encargado
+actor Empleado
 participant Controlador
 participant Producto
 participant Proveedor
@@ -11,7 +11,7 @@ participant Proveedor
 ' INICIO DEL PROCESO
 '===========================================================
 
-Encargado -> Controlador : seleccionarOpcionCrearPedidoStock()
+Empleado -> Controlador : seleccionarOpcionCrearPedidoStock()
 activate Controlador
 
 
@@ -29,7 +29,7 @@ Controlador -> Producto : obtenerCantidadRequerida()
 activate Producto
 Producto --> Controlador : <<cantidadRequerida>>
 deactivate Producto
-Controlador --> Encargado : <<"Mostrar formulario de pedido de stock":string>>
+Controlador --> Empleado : <<null>>
 ' Controlador calcula faltantes
 '===========================================================
 ' MODIFICACIÓN DEL PEDIDO POR EL USUARIO
@@ -38,13 +38,14 @@ Controlador --> Encargado : <<"Mostrar formulario de pedido de stock":string>>
 ' VALIDACIÓN
 '===========================================================
 opt No hay productos con faltante
-    Controlador --> Encargado : <<"No existen productos con faltante de stock":string>>
-    Controlador --> Encargado : <<"Ingrese nuevas cantidades":string>>
+    Controlador --> Empleado : <<"No existen productos con faltante de stock":string>>
+    Controlador --> Empleado : <<"Ingrese nuevas cantidades":string>>
     deactivate Controlador    
 end
 
-    Encargado -> Controlador : modificarCantidades(productosModificados)
+    Empleado -> Controlador : modificarCantidades(productosModificados)
     activate Controlador
+    
     '=======================================================
     ' GENERAR PEDIDO
     '=======================================================
@@ -54,7 +55,10 @@ end
     deactivate Proveedor
 
     ' Crear pedido (conceptual, no existe clase Pedido)
-    Controlador --> Encargado : <<productosAReponer ,cantidadesAReponer ,proveedoresAsociados , "Pedido generado correctamente":string>>
+    Controlador --> Empleado : <<productosAReponer ,cantidadesAReponer ,proveedoresAsociados , "Pedido generado correctamente":string>>
+    note right of Empleado
+    cantidadesAReponer = cantidadRequerida - cantidadActual
+end note
     deactivate Controlador
 
 @enduml

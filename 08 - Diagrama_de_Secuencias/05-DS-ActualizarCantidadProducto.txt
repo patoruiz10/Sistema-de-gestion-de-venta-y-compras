@@ -2,64 +2,53 @@
 !theme plain
 title Actualizar Cantidad de Producto - SELVENT
 
-actor Encargado
-
+actor Empleado
 participant Controlador
 participant Producto
 
 '===========================================================
 ' INICIO DEL PROCESO
 '===========================================================
-
-Encargado -> Controlador : seleccionarOpcionActualizarCantidad()
+Empleado -> Controlador : seleccionarOpcionActualizarCantidad()
 activate Controlador
-
-Controlador --> Encargado : <<"Mostrar listado de productos para actualizar":string>>
+Controlador --> Empleado : <<null>>
 deactivate Controlador
+
 '===========================================================
 ' INGRESO DE DATOS DE ACTUALIZACIÓN
 '===========================================================
-
-Encargado -> Controlador : modificarCantidad(codigo, nuevaCantidad)
+Empleado -> Controlador : modificarCantidad(codigo, nuevaCantidad)
 activate Controlador
+
 '===========================================================
 ' VALIDACIÓN DE CANTIDAD
 '===========================================================
-
 alt Cantidad negativa o no válida
-    Controlador --> Encargado : <<"La cantidad ingresada no es válida":string>>
+    Controlador --> Empleado : <<"La cantidad ingresada no es válida":string>>
 
 else Cantidad válida
 
     '=======================================================
-    ' BÚSQUEDA DEL PRODUCTO POR CÓDIGO
+    ' ACTUALIZACIÓN DIRECTA EN EL CATÁLOGO DE PRODUCTOS
     '=======================================================
-    Controlador -> Producto : obtenerCodigo(codigo)
+    Controlador -> Producto : actualizarCantidadStock(codigo, nuevaCantidad)
     activate Producto
 
     alt Producto no encontrado
         Producto --> Controlador : <<"Producto no encontrado":string>>
         
 
-        Controlador --> Encargado : <<"El código de producto ingresado no existe":string>>
+        Controlador --> Empleado : <<"El código de producto ingresado no existe":string>>
 
-    else Producto encontrado
-        Producto --> Controlador : <<producto>>
-        deactivate Producto
-
-        '===================================================
-        ' ACTUALIZACIÓN DE LA CANTIDAD EN STOCK
-        '===================================================
-        Controlador -> Producto : actualizarCantidadStock(nuevaCantidad : int)
-        activate Producto
+    else Producto actualizado
         Producto --> Controlador : <<"Cantidad actualizada correctamente":string>>
         deactivate Producto
 
-        Controlador --> Encargado : <<"Producto actualizado correctamente":string>>
+        Controlador --> Empleado : <<"Producto actualizado correctamente":string>>
         deactivate Controlador
     end
+    
 end
-
 
 
 @enduml
