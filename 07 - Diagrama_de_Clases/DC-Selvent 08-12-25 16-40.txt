@@ -1,28 +1,35 @@
 @startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Minimarket (con m�todos completos)
+title Diagrama de Clases - Minimarket (con métodos completos)
 
 ' ==== CLASES ====
 
 class Producto {
   - codigo : int
-  - nombre : string
+  - descripcion : string
   - costo : float
   - codigoBarra : int
   - categoria : string
   - cantidad : int
   - precioUnitario : float
-  + obtenerCodigo (int)
+  + crearProducto(codigo : int, descripcion : string, cantidad : int, costo : float, proveedor : Proveedor, categoria : Categoría) : Producto
+  + obtenerCodigo(codigo : int) : Producto
   + cambiarPrecio(nuevo : float)
-  + asignarCategoria(Categor�a)
+  + asignarCategoria(Categoría)
+  + actualizarCantidadStock(codigo : int , nuevaCantidad : int)
+  + obtenerCantidadEnFecha(fecha : Date) : int
+  + obtenerCantidadRequerida() : int
+  + obtenerTodosLosProductos() : List<Producto>
 }
 
-class Categor�a {
-    -nombre
+class Categoría {
+    - nombreCategoria : string
     - productos : List<Producto>
+    + obtenerCategoria(nombreCategoria : string) : Categoría
     + crearCategoria(nombre)
     + eliminarProducto(p : Producto)
-    + agregarProducto (p : Producto)
+    + agregarProducto(p : Producto)
+
 }
 
 class Cliente {
@@ -50,6 +57,7 @@ class Venta {
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
   + calcularTotal() : float
+  + obtenerVentasPorFecha(fecha : Date) : List<Venta>
 }
 
 class LineaDeVenta {
@@ -64,12 +72,12 @@ class LineaDeVenta {
 class Empleado {
   - nombre : String
   - usuario : String
-  - contrase�a : String
+  - contraseña : String
   - telefono : int
   - dni : int
   - rol : String
-  + introducirCredenciales(usuario,contrase�a)
-  + crearEmpleado(usuario,contrase�a,rol)
+  + introducirCredenciales(usuario,contraseña)
+  + crearUsuario(usuario,contraseña,rol)
   + mostrarInfo()
   + iniciaVenta() : boolean
   + finalizaVenta() : boolean 
@@ -100,11 +108,11 @@ class Controlador {
    + cierraSesion() : boolean
    + validarPago() : boolean
    + procesarPago()
-   + a�adirProducto(p : Producto)
+   + añadirProducto(p : Producto)
    + eliminarProducto(p : Producto)
    + buscarProducto(p : Producto)
    + actualizarProducto(p : Producto)
-   + guardarComprobante(v : Venta)
+   + guardarComprobante(v : Venta, nroTicket : int)
    + solicitarReabastecimiento()
    + validarCredenciales()
    + registrarCierre()
@@ -113,11 +121,28 @@ class Controlador {
    + calcularTotal()
    + ingresarCantidad(cant : int)
    + seleccionarMetodoPago(tipoMetodo : int)
+   + seleccionarOpcionAñadirProducto()
+   + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
+   + seleccionarOpcionRegistrarProveedor()
+   + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
+   + seleccionarOpcionActualizarCantidad()
+   + modificarCantidad(codigo : int, nuevaCantidad : int)
+   + seleccionarOpcionConsultarVariacionStock()
+   + consultarVariacionStock(fecha : Date)
+   + validarFecha(fecha : Date) : boolean
+   + seleccionarOpcionHistorialVentas()
+   + consultarHistorialVentas(fecha : Date)
+   + seleccionarOpcionCrearNuevoUsuario()
+   + seleccionarOpcionMostrarInventario()
+   + seleccionarOpcionCrearNuevoUsuario()
+   + agregarProveedor(proveedorNuevo : proveedor)
+   + agregarProducto(productoNuevo : Producto)
+   + agregarUsuario(nuevoEmpleado : Empleado)
+   + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
 }
 class Persona{
   - nombre : String
   - telefono : int
-  - dni : int
   + crearPersona()
   + mostrarInfo()
 }
@@ -126,6 +151,7 @@ class Proveedor {
   - cuit : int
   - telefono : int
   - direccion : String
+  + obtenerProveedor(cuit : int) : Proveedor
   + crearProveedor(nombre,telefono,cuit,mail,direccion)
   + mostrarInfo() : String
   + contactar() : void
@@ -134,7 +160,7 @@ class Proveedor {
 }
 ' ==== RELACIONES ====
 
-Producto "1..1" -- "1..*" Categor�a : Pertenece a
+Producto "1..1" -- "1..*" Categoría : Pertenece a
 
 Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..*" -- "1..1" Producto : refiere_a
