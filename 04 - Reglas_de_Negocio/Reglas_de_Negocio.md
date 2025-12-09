@@ -1,11 +1,10 @@
 ﻿## Hechos 
 * El usuario debe controlar la mercaderia disponible
 * Debe estar conectado a la parte de ventas
-* La mercadería debe estar declarada por código de barra, cant existente, descripción, tipo de producto, nombre del producto y nombre de marca
+* La mercadería debe estar declarada por código de barra, una cantidad existente, descripción, tipo de producto, nombre del producto y nombre de marca
 * Cada producto tiene un código.
 * Se tiene que registrar cada venta.
 * El cliente debe ser atendido por un vendedor.
-* Cada producto tiene un código.
 * Se tiene que registrar cada venta.
 * El cliente debe ser atendido por un vendedor.
 
