@@ -6,7 +6,6 @@
 * Se tiene que registrar cada venta.
 * El cliente debe ser atendido por un vendedor.
 * Se tiene que registrar cada venta.
-* El cliente debe ser atendido por un vendedor.
 
 ## Restricciones
 * El sistema no permite finalizar una venta si no incluye la condicion frente al IVA del cliente(CF,RI,etc.)
