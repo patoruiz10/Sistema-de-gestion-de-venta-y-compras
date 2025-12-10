@@ -1,0 +1,33 @@
+@startuml
+!theme plain
+title Mostrar Inventario Completo - SELVENT
+
+actor Empleado
+participant Controlador
+participant Producto
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionMostrarInventario()
+activate Controlador
+
+'===========================================================
+' OBTENER LISTA DE PRODUCTOS
+'===========================================================
+
+Controlador -> Producto : obtenerTodosLosProductos()
+activate Producto
+Producto --> Controlador : <<listaProductos>>
+deactivate Producto
+
+'===========================================================
+' MOSTRAR INVENTARIO AL USUARIO
+'===========================================================
+
+Controlador --> Empleado : <<listaProductos, "Inventario mostrado correctamente":string>>
+
+deactivate Controlador
+
+@enduml

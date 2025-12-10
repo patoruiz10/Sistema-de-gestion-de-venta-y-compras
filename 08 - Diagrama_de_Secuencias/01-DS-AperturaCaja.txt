@@ -1,0 +1,37 @@
+@startuml
+!theme plain
+title Diagrama de Secuencia - Apertura de Caja
+
+actor Empleado
+participant Controlador
+participant Caja
+
+' --- Inicio del caso ---
+Controlador --> Empleado : <<"solicitarCredenciales" :string>>
+activate Controlador
+
+' --- Validación de credenciales ---
+Empleado -> Controlador : inicioSesion(usuario, contraseña)
+
+alt Credenciales inválidas
+    Controlador --> Empleado : <<"Credenciales incorrectas" :string>>
+else Credenciales válidas
+
+
+
+' --- Verificación del estado de la caja ---
+Controlador -> Caja : abrirCaja()
+activate Caja
+Caja --> Controlador : <<estado :bool>>
+deactivate Caja
+
+
+    ' --- Registrar apertura ---
+
+    Controlador --> Empleado : <<"Caja abierta correctamente" :string>>
+    deactivate Caja
+    deactivate Controlador
+end
+    
+
+@enduml

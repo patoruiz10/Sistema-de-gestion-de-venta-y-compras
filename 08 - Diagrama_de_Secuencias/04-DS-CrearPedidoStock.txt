@@ -1,0 +1,64 @@
+@startuml
+!theme plain
+title Crear Pedido de Stock - SELVENT (v2.5)
+
+actor Empleado
+participant Controlador
+participant Producto
+participant Proveedor
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionCrearPedidoStock()
+activate Controlador
+
+
+
+'===========================================================
+' OBTENER STOCK ACTUAL Y REQUERIDO
+'===========================================================
+
+Controlador -> Producto : obtenerCantidad()
+activate Producto
+Producto --> Controlador : <<cantidadActual>>
+deactivate Producto
+
+Controlador -> Producto : obtenerCantidadRequerida()
+activate Producto
+Producto --> Controlador : <<cantidadRequerida>>
+deactivate Producto
+Controlador --> Empleado : <<null>>
+' Controlador calcula faltantes
+'===========================================================
+' MODIFICACIÓN DEL PEDIDO POR EL USUARIO
+'===========================================================
+'===========================================================
+' VALIDACIÓN
+'===========================================================
+opt No hay productos con faltante
+    Controlador --> Empleado : <<"No existen productos con faltante de stock":string>>
+    Controlador --> Empleado : <<"Ingrese nuevas cantidades":string>>
+    deactivate Controlador    
+end
+
+    Empleado -> Controlador : modificarCantidades(productosModificados)
+    activate Controlador
+    
+    '=======================================================
+    ' GENERAR PEDIDO
+    '=======================================================
+    Controlador -> Proveedor : obtenerProveedor(cuit)
+    activate Proveedor
+    Proveedor --> Controlador : <<proveedor>>
+    deactivate Proveedor
+
+    ' Crear pedido (conceptual, no existe clase Pedido)
+    Controlador --> Empleado : <<productosAReponer ,cantidadesAReponer ,proveedoresAsociados , "Pedido generado correctamente":string>>
+    note right of Empleado
+    cantidadesAReponer = cantidadRequerida - cantidadActual
+end note
+    deactivate Controlador
+
+@enduml

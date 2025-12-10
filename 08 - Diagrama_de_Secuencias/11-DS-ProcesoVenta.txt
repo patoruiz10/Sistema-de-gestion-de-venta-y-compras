@@ -1,0 +1,154 @@
+@startuml
+!theme plain
+title Proceso de Venta - SELVENT
+
+actor Empleado
+participant Controlador
+participant Caja
+participant Venta
+participant Producto
+participant MetodoDePago
+participant Impresion
+participant "<<multiobjeto>> LineasDeVenta : LineaDeVenta" as LineasDeVenta
+
+'===========================================================
+' INICIO DEL PROCESO DE VENTA
+'===========================================================
+Empleado -> Controlador : iniciarVenta()
+activate Controlador
+Controlador -> Venta : agregarDatos(Cliente)
+activate Venta
+Venta --> Controlador : <<"Venta iniciada":string>>
+deactivate Venta
+
+'===========================================================
+' CARGA DE PRODUCTOS
+'===========================================================
+loop "Cargar productos mientras el usuario desee agregar"
+    Empleado -> Controlador : ingresarCodigoProducto(codigo)
+    Controlador -> Producto : obtenerCodigo(codigo)
+    activate Producto
+
+    alt Código de producto inexistente
+        Producto --> Controlador : <<"Código inexistente, vuelva a ingresar":string>>
+        Controlador --> Empleado : <<"Código inexistente, vuelva a ingresar":string>>
+
+    else Producto encontrado
+        Producto --> Controlador : <<producto>>
+        deactivate Producto
+
+        ' El usuario ingresa la cantidad deseada
+        Empleado -> Controlador : ingresarCantidad(cant)
+
+        '===================================================
+        ' CREACIÓN DE LA LÍNEA DE VENTA EN UN SOLO PASO
+        '===================================================
+        create "lineaNueva : LineaDeVenta" as lineaNueva
+        Controlador -> lineaNueva : crearLineaVenta(producto, cant, precioUnitario)
+
+        note left of lineaNueva
+            crearLineaVenta(producto, cant, precioUnitario):
+              - asigna el producto
+              - asigna la cantidad
+              - asigna el precio unitario
+              - calcula subtotal = cantidad * precioUnitario
+        end note
+        
+        ' Registrar línea en el multiobjeto de líneas
+        Controlador -> LineasDeVenta : agregarLineaVenta(lineaNueva)
+        activate LineasDeVenta
+        LineasDeVenta --> Controlador : <<null>>
+        deactivate LineasDeVenta
+
+
+        ' Agregar línea a la venta
+        Controlador -> Venta : agregarLineaVenta(lineaNueva)
+        activate Venta
+        Venta --> Controlador : <<"Línea de venta agregada":string>>
+        deactivate Venta
+
+
+        Controlador --> Empleado : <<"Producto agregado a la venta":string>>
+    end
+end
+
+'===========================================================
+' CÁLCULO DEL TOTAL
+'===========================================================
+Empleado -> Controlador : solicitarTotal()
+Controlador -> Venta : calcularTotal()
+activate Venta
+Venta --> Controlador : <<total>>
+deactivate Venta
+Controlador --> Empleado : <<total>>
+
+'===========================================================
+' SELECCIÓN Y VALIDACIÓN DEL MÉTODO DE PAGO
+'===========================================================
+Empleado -> Controlador : seleccionarMetodoPago(tipoMetodo)
+Controlador -> MetodoDePago : obtenerTipo()
+activate MetodoDePago
+MetodoDePago --> Controlador : <<tipoMetodo>>
+
+alt Método de pago no disponible
+    deactivate MetodoDePago
+    Controlador --> Empleado : <<"Método de pago no disponible":string>>
+
+else Método de pago disponible
+    deactivate MetodoDePago
+    Controlador -> Venta : registraPago(MetodoDePago)
+    activate Venta
+
+    alt Fondos insuficientes
+        Venta --> Controlador : <<"No es posible efectuar el pago":string>>
+        
+        Controlador --> Empleado : <<"No es posible efectuar el pago":string>>
+
+    else Proceso de pago cancelado
+        Venta --> Controlador : <<"Proceso de pago cancelado":string>>
+        
+        Controlador --> Empleado : <<"Proceso de pago cancelado":string>>
+
+    else Pago aceptado
+        Venta --> Controlador : <<"Pago registrado":string>>
+        deactivate Venta
+
+        '=========================
+        ' Actualización de caja
+        '=========================
+        Controlador -> Caja : balance()
+        activate Caja
+        Caja --> Controlador : <<saldoActual>>
+        deactivate Caja
+
+        '=========================
+        ' Actualización de stock (después del pago)
+        '=========================
+        loop "Para cada línea de venta de la venta actual"
+            Controlador -> Producto : actualizarCantidadStock(codigo, cantidadVendida)
+            activate Producto
+            Producto --> Controlador : <<"Stock actualizado":string>>
+            deactivate Producto
+        end
+
+        '=========================
+        ' Generación y guardado de comprobante digital
+        '=========================
+        Controlador -> Impresion : generarNroTicket()
+        activate Impresion
+        Impresion --> Controlador : <<nroTicket>>
+        deactivate Impresion
+
+        Controlador -> Impresion : guardarComprobante(Venta, nroTicket)
+        activate Impresion
+        Impresion --> Controlador : <<"Comprobante guardado":string>>
+        deactivate Impresion
+
+        Controlador --> Empleado : <<"Venta registrada correctamente":string>>
+        deactivate Controlador
+    end
+end
+
+
+
+@enduml

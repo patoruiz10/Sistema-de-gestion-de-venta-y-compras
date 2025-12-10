@@ -1,0 +1,54 @@
+@startuml
+!theme plain
+title Actualizar Cantidad de Producto - SELVENT
+
+actor Empleado
+participant Controlador
+participant Producto
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+Empleado -> Controlador : seleccionarOpcionActualizarCantidad()
+activate Controlador
+Controlador --> Empleado : <<null>>
+deactivate Controlador
+
+'===========================================================
+' INGRESO DE DATOS DE ACTUALIZACIÓN
+'===========================================================
+Empleado -> Controlador : modificarCantidad(codigo, nuevaCantidad)
+activate Controlador
+
+'===========================================================
+' VALIDACIÓN DE CANTIDAD
+'===========================================================
+alt Cantidad negativa o no válida
+    Controlador --> Empleado : <<"La cantidad ingresada no es válida":string>>
+
+else Cantidad válida
+
+    '=======================================================
+    ' ACTUALIZACIÓN DIRECTA EN EL CATÁLOGO DE PRODUCTOS
+    '=======================================================
+    Controlador -> Producto : actualizarCantidadStock(codigo, nuevaCantidad)
+    activate Producto
+
+    alt Producto no encontrado
+        Producto --> Controlador : <<"Producto no encontrado":string>>
+        
+
+        Controlador --> Empleado : <<"El código de producto ingresado no existe":string>>
+
+    else Producto actualizado
+        Producto --> Controlador : <<"Cantidad actualizada correctamente":string>>
+        deactivate Producto
+
+        Controlador --> Empleado : <<"Producto actualizado correctamente":string>>
+        deactivate Controlador
+    end
+    
+end
+
+
+@enduml

@@ -1,22 +1,21 @@
 ﻿# Caso de uso: Apertura de Caja
 * Actores primarios: Empleado, Encargado
 * Actores secundarios: No tiene
-* Precondición: El usuario debe estar logeado 
+* Precondición: El usuario debe estar logueado.
 * Postcondición: No tiene
 
-### Camion Básico
-* El usuario selecciona la opción de “Apertura Caja”.
-* El sistema muestra un mensaje para ingresar el usuario y la contraseña (credenciales).
-* El usuario se loguea con sus credenciales.
-* El sistema verifica las credenciales del usuario, abre la caja y muestra una alerta visual con un mensaje “Se abrió la caja correctamente (fecha del día y hora)”
+### Camino Básico
+1. El usuario selecciona la opción “Apertura de Caja”.
+2. El sistema abre la caja y muestra un mensaje indicando que la caja fue abierta correctamente (fecha y hora).
+
 
 ### Caminos alternativos:
-4.a Las credenciales ingresadas son incorrectas y no puede acceder al sistema.  
-4.a.1 El sistema no pudo corroborar correctamente las credenciales ingresadas entonces se muestra una alerta: “Las credenciales ingresadas son incorrectas o no tiene permisos.”  
-4.a.2  Vuelve al paso “3”.
+2.a La caja ya se encuentra abierta.
+2.a.1 El sistema muestra un mensaje: "La caja ya está abierta".
+2.a.2 Fin de caso de uso.
 
 ### Escenario de éxito: 
 * El usuario pudo realizar la apertura de caja.
 
 ### Escenario de fracaso: 
-* El usuario no pudo realizar la apertura de caja por ingresar sus credenciales incorrectas.
+* El usuario no pudo realizar la apertura de caja por que la caja ya estaba abierta.

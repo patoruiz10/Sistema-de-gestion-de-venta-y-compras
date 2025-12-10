@@ -1,0 +1,59 @@
+@startuml
+!theme plain
+title Consulta de Historial de Ventas - SELVENT
+
+actor Empleado
+participant Controlador
+participant Venta
+
+'===========================================================
+' INICIO DEL PROCESO
+'===========================================================
+
+Empleado -> Controlador : seleccionarOpcionHistorialVentas()
+activate Controlador
+
+Controlador --> Empleado : <<null>>
+deactivate Controlador
+'===========================================================
+' USUARIO INGRESA FECHA
+'===========================================================
+
+Empleado -> Controlador : consultarHistorialVentas(fecha)
+activate Controlador
+'===========================================================
+' VALIDACIONES
+'===========================================================
+
+alt Fecha no ingresada
+    Controlador --> Empleado : <<"Falta completar la fecha":string>>
+
+else Fecha futura
+    Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
+
+else Fecha válida
+
+    '=======================================================
+    ' CONSULTAR VENTAS POR FECHA
+    '=======================================================
+    Controlador -> Venta : obtenerVentasPorFecha(fecha)
+    activate Venta
+
+    alt No hay ventas registradas
+        Venta --> Controlador : <<"Sin ventas":string>>
+        
+
+        Controlador --> Empleado : <<"No se encontraron ventas para la fecha consultada":string>>
+
+    else Ventas encontradas
+        Venta --> Controlador : <<listaVentas>>
+        deactivate Venta
+
+        Controlador --> Empleado : <<listaVentas, "Ventas mostradas correctamente":string>>
+        deactivate Controlador
+    end
+end
+
+
+
+@enduml

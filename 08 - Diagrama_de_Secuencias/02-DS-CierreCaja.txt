@@ -1,0 +1,30 @@
+@startuml
+!theme plain
+title Diagrama de Secuencia - Cierre de Caja
+
+actor Empleado
+participant Controlador
+participant Caja
+participant Venta
+
+
+Empleado -> Controlador : cerrarCaja()
+activate Controlador
+
+Controlador -> Venta : generarInformeDiario()
+activate Venta
+Venta --> Controlador : <<InformeDiario :string>>
+deactivate Venta
+
+Controlador -> Caja : registrarCierre()
+activate Caja
+Caja --> Controlador : <<InformeDiario + fechaHora>>
+deactivate Caja
+
+Controlador --> Empleado : <<"Cierre de caja realizado con éxito. Informe disponible." :string>>
+
+deactivate Controlador
+
+@enduml
+
+

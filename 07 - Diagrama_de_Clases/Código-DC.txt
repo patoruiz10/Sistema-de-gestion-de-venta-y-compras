@@ -1,0 +1,180 @@
+@startuml
+!theme reddress-lightblue
+title Diagrama de Clases - Minimarket (con métodos completos)
+
+' ==== CLASES ====
+
+class Producto {
+  - codigo : int
+  - descripcion : string
+  - costo : float
+  - codigoBarra : int
+  - categoria : string
+  - cantidad : int
+  - precioUnitario : float
+  + crearProducto(codigo : int, descripcion : string, cantidad : int, costo : float, proveedor : Proveedor, categoria : Categoría) : Producto
+  + obtenerCodigo(codigo : int) : Producto
+  + cambiarPrecio(nuevo : float)
+  + asignarCategoria(Categoría)
+  + actualizarCantidadStock(codigo : int , nuevaCantidad : int)
+  + obtenerCantidadEnFecha(fecha : Date) : int
+  + obtenerCantidadRequerida() : int
+  + obtenerTodosLosProductos() : List<Producto>
+}
+
+class Categoría {
+    - nombreCategoria : string
+    - productos : List<Producto>
+    + obtenerCategoria(nombreCategoria : string) : Categoría
+    + crearCategoria(nombre)
+    + eliminarProducto(p : Producto)
+    + agregarProducto(p : Producto)
+
+}
+
+class Cliente {
+ - condicionIVA : string
+ - nombre : String
+ - telefono : int
+ - dni : int
+ + crearCliente(nombre,telefono,dni,condicionIVA)
+ + mostrarInfo()
+ + iniciaCompra()
+}
+
+class Venta {
+  - fecha : Date
+  - total : float
+  - lineaVenta : String
+  - descuento
+  - pago
+  + agregarMetododePago(MetodoDePago)
+  + agregarDatos(Cliente)
+  + agregarLineaVenta(LineaDeVenta)
+  + eliminarLinea(LineaDeVenta)
+  + registraPago(MetodoDePago)
+  + obtenerSubtotal() : float
+  + aplicarDescuento(d : float)
+  + quitarDescuento(d : float)
+  + calcularTotal() : float
+  + obtenerVentasPorFecha(fecha : Date) : List<Venta>
+}
+
+class LineaDeVenta {
+  - cantidad : int
+  - precioUnitario : float
+  - Subtotal : float
+  + actualizarCantidad(cant : int)
+  + actualizarPrecioUnitario (precioU : float)
+  + calcularSubtotal() : float
+}
+
+class Empleado {
+  - nombre : String
+  - usuario : String
+  - contraseña : String
+  - telefono : int
+  - dni : int
+  - rol : String
+  + introducirCredenciales(usuario,contraseña)
+  + crearUsuario(usuario,contraseña,rol)
+  + mostrarInfo()
+  + iniciaVenta() : boolean
+  + finalizaVenta() : boolean 
+}
+
+class Caja {
+  - numero : int
+  - saldoActual : float
+  - estado: bool
+  + balance()
+  + abrirCaja() : boolean
+  + cerrarCaja() : boolean
+}
+
+class MetodoDePago {
+  - tipo : int
+  - detalles : String
+  + obtenerTipo()
+}
+class Impresion {
+    - nroTicket : int
+    - empleado : Empleado
+    + generarNroTicket () : int 
+}
+
+class Controlador {
+   + inicioSesion(string) : boolean
+   + cierraSesion() : boolean
+   + validarPago() : boolean
+   + procesarPago()
+   + añadirProducto(p : Producto)
+   + eliminarProducto(p : Producto)
+   + buscarProducto(p : Producto)
+   + actualizarProducto(p : Producto)
+   + guardarComprobante(v : Venta, nroTicket : int)
+   + solicitarReabastecimiento()
+   + validarCredenciales()
+   + registrarCierre()
+   + generarInformeDiario()
+   + ingresarCodigoProducto(codigo : int)
+   + calcularTotal()
+   + ingresarCantidad(cant : int)
+   + seleccionarMetodoPago(tipoMetodo : int)
+   + seleccionarOpcionAñadirProducto()
+   + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
+   + seleccionarOpcionRegistrarProveedor()
+   + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
+   + seleccionarOpcionActualizarCantidad()
+   + modificarCantidad(codigo : int, nuevaCantidad : int)
+   + seleccionarOpcionConsultarVariacionStock()
+   + consultarVariacionStock(fecha : Date)
+   + validarFecha(fecha : Date) : boolean
+   + seleccionarOpcionHistorialVentas()
+   + consultarHistorialVentas(fecha : Date)
+   + seleccionarOpcionCrearNuevoUsuario()
+   + seleccionarOpcionMostrarInventario()
+   + seleccionarOpcionCrearNuevoUsuario()
+   + agregarProveedor(proveedorNuevo : proveedor)
+   + agregarProducto(productoNuevo : Producto)
+   + agregarUsuario(nuevoEmpleado : Empleado)
+   + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
+}
+class Persona{
+  - nombre : String
+  - telefono : int
+  + crearPersona()
+  + mostrarInfo()
+}
+class Proveedor {
+  - mail : string
+  - cuit : int
+  - telefono : int
+  - direccion : String
+  + obtenerProveedor(cuit : int) : Proveedor
+  + crearProveedor(nombre,telefono,cuit,mail,direccion)
+  + mostrarInfo() : String
+  + contactar() : void
+  + registrarEntrega(fecha : Date) : void
+  
+}
+' ==== RELACIONES ====
+
+Producto "1..1" -- "1..*" Categoría : Pertenece a
+
+Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
+LineaDeVenta "1..*" -- "1..1" Producto : refiere_a
+
+Cliente "1..1" -- "1..*" Venta : genera
+Empleado "1..1" -- "1..*" Venta : procesa
+Caja "1..1" -- "1..*" Venta : registra
+
+Venta "1..1" *-- "1..1" Impresion : solicita
+Venta "1..1" -- "1..*" MetodoDePago : pagada_con
+Controlador "1..1" -- "1..*" Caja : supervisada
+Producto "1..*" -- "1..*" Proveedor : suministrado_por
+Empleado --|> Persona
+Cliente --|> Persona
+Proveedor --|> Persona
+
+@enduml

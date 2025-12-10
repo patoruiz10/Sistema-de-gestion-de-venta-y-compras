@@ -1,0 +1,113 @@
+@startchen
+title Diagrama Entidad–Relación - Minimarket
+
+' === ENTIDADES ===
+
+entity Cliente {
+condicionIVA : string
+nombre : string
+telefono : int
+dni : int
+}
+
+entity Venta {
+fecha : date
+total : float
+descuento : float
+}
+
+entity LineaDeVenta {
+cantidad : int
+precioUnitario : float
+subtotal : float
+}
+
+entity Producto {
+nombre : string
+costo : float
+codigoBarra : int
+categoria : string
+cantidad : int
+precioUnitario : float
+}
+
+entity MetodoDePago {
+tipo : int
+detalles : string
+}
+
+entity Empleado {
+nombre : string
+telefono : int
+dni : int
+rol : string
+}
+entity Caja {
+numero : int
+saldoActual : float
+estado : bool
+entity Impresion {
+nroTicket : int
+}
+
+entity Categoria {
+nombre : string
+}
+
+entity Proveedor {
+mail : string
+cuit : int
+telefono : int
+direccion : string
+}
+
+' === RELACIONES ===
+relationship Genera {
+}
+relationship Compuesta_por {
+}
+relationship Refiere_a {
+}
+relationship Pagada_con {
+}
+relationship Procesa {
+}
+relationship Registra {
+}
+relationship Solicita {
+}
+relationship Pertenece_a {
+}
+relationship Suministrado_por {
+}
+
+' === CONEXIONES CON CARDINALIDAD ===
+Cliente -1- Genera
+Genera -N- Venta
+
+Venta -1- Compuesta_por
+Compuesta_por -N- LineaDeVenta
+
+LineaDeVenta -1- Refiere_a
+Refiere_a -1- Producto
+
+Venta -1- Pagada_con
+Pagada_con -N- MetodoDePago
+
+Empleado -1- Procesa
+Procesa -N- Venta
+
+Caja -1- Registra
+Registra -N- Venta
+
+Venta -1- Solicita
+Solicita -1- Impresion
+
+Producto -1- Pertenece_a
+Pertenece_a -N- Categoria
+
+Producto -N- Suministrado_por
+Suministrado_por -N- Proveedor
+
+@endchen
+
