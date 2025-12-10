@@ -7,8 +7,8 @@
 
 ### Camino básico: 
 1. El usuario selecciona la opción de “Consulta de historial de ventas”. 
-2. El sistema muestra opciones para consultar todas las ventas correspondientes de un día en particular, semana o mes.  
-3. El usuario elige la opción deseada.  
+2. El sistema muestra opciones para consultar todas las ventas correspondientes de un día.
+3. El usuario elige la fecha a consultar. 
 4. El sistema muestra todas las ventas realizadas en la fecha consultada.
 
              

@@ -10,6 +10,7 @@
            
 ### Caminos alternativos:
 * No tiene.
+
 ### Escenario de éxito:
 - El usuario pudo cerrar la caja.
 
