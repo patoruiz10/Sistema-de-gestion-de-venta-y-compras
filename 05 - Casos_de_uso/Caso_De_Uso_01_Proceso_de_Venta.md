@@ -21,7 +21,7 @@
 4.a El monto elegido no se puede concretar por fondos insuficientes.  
 4.a.1 El sistema muestra un mensaje: "No es posible efectuar el pago", vuelve al paso "3".  
 4.b El usuario decide cancelar el proceso de pago. 
-4.b.1 El sistema muestra un mensaje: "Proceso de pago cancelado", vuelve al paso "3".
+4.b.1 El sistema muestra un mensaje: "Proceso de pago cancelado", fin de caso de uso
 
 ### Escenario de Éxito
 
