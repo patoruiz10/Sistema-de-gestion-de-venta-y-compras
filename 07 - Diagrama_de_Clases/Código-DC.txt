@@ -8,7 +8,6 @@ class Producto {
   - codigo : int
   - descripcion : string
   - costo : float
-  - codigoBarra : int
   - categoria : string
   - cantidad : int
   - precioUnitario : float
