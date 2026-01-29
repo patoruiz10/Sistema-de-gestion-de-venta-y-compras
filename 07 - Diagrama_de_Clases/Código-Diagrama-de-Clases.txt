@@ -1,6 +1,6 @@
 @startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Minimarket (con métodos completos)
+title Diagrama de Clases - Selvent
 
 ' ==== CLASES ====
 
@@ -112,28 +112,23 @@ class Controlador {
    + buscarProducto(p : Producto)
    + actualizarProducto(p : Producto)
    + guardarComprobante(v : Venta, nroTicket : int)
-   + solicitarReabastecimiento()
    + validarCredenciales()
    + registrarCierre()
    + generarInformeDiario()
    + ingresarCodigoProducto(codigo : int)
    + calcularTotal()
    + ingresarCantidad(cant : int)
-   + seleccionarMetodoPago(tipoMetodo : int)
-   + seleccionarOpcionAñadirProducto()
+   + metodoPago(tipoMetodo : int)
    + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
-   + seleccionarOpcionRegistrarProveedor()
    + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
-   + seleccionarOpcionActualizarCantidad()
-   + modificarCantidad(codigo : int, nuevaCantidad : int)
-   + seleccionarOpcionConsultarVariacionStock()
-   + consultarVariacionStock(fecha : Date)
+   + modificarCantidades(codigo : int, nuevaCantidad : int)
+   + consultarVariacionStock()
+   + consultarVariacionStockPorFecha(fecha : Date)
    + validarFecha(fecha : Date) : boolean
-   + seleccionarOpcionHistorialVentas()
    + consultarHistorialVentas(fecha : Date)
-   + seleccionarOpcionCrearNuevoUsuario()
-   + seleccionarOpcionMostrarInventario()
-   + seleccionarOpcionCrearNuevoUsuario()
+   + crearNuevoUsuario()
+   + mostrarInventario()
+   + crearPedidoStock()
    + agregarProveedor(proveedorNuevo : proveedor)
    + agregarProducto(productoNuevo : Producto)
    + agregarUsuario(nuevoEmpleado : Empleado)
