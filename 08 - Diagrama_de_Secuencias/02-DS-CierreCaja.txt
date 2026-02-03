@@ -2,10 +2,10 @@
 !theme plain
 title Diagrama de Secuencia - Cierre de Caja
 
-actor Empleado
-participant Controlador
-participant Caja
-participant Venta
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "cj:Caja" as Caja
+participant "v:Venta" as Venta
 
 
 Empleado -> Controlador : cerrarCaja()

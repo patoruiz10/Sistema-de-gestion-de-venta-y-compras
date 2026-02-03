@@ -1,19 +1,11 @@
 @startuml
 !theme plain
-title Registrar Proveedor Nuevo - SELVENT
+title Diagrama de Secuencia - Registrar Proveedor Nuevo
 
-actor Empleado
-participant Controlador
-participant Proveedor
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "prov:Proveedor" as Proveedor
 participant "<<multiobjeto>> proveedores : Proveedor" as proveedores
-
-'===========================================================
-' INICIO DEL REGISTRO
-'===========================================================
-Empleado -> Controlador : seleccionarOpcionRegistrarProveedor()
-activate Controlador
-Controlador --> Empleado : <<null>>
-deactivate Controlador
 
 '===========================================================
 ' USUARIO COMPLETA FORMULARIO Y PRESIONA GUARDAR
@@ -48,7 +40,7 @@ else Todos los campos completos
         '===================================================
         ' CREACIÓN DEL NUEVO PROVEEDOR (NUEVA ENTIDAD)
         '===================================================
-        create proveedorNuevo
+        create "pn:proveedorNuevo" as proveedorNuevo
         Controlador -> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
 
         '===================================================

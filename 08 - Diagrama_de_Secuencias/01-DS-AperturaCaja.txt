@@ -2,16 +2,15 @@
 !theme plain
 title Diagrama de Secuencia - Apertura de Caja
 
-actor Empleado
-participant Controlador
-participant Caja
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "cj:Caja" as Caja
 
 ' --- Inicio del caso ---
-Controlador --> Empleado : <<"solicitarCredenciales" :string>>
-activate Controlador
 
 ' --- Validación de credenciales ---
 Empleado -> Controlador : inicioSesion(usuario, contraseña)
+activate Controlador
 
 alt Credenciales inválidas
     Controlador --> Empleado : <<"Credenciales incorrectas" :string>>
