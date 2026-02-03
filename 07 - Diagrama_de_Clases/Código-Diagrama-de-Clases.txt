@@ -42,7 +42,7 @@ class Cliente {
 }
 
 class Venta {
-  - fecha : Date
+  - fechaHora : Datetime
   - total : float
   - lineaVenta : String
   - descuento
@@ -103,7 +103,7 @@ class Impresion {
 }
 
 class Controlador {
-   + inicioSesion(string) : boolean
+   + inicioSesion(usuario:string, contraseña:string) : boolean
    + cierraSesion() : boolean
    + validarPago() : boolean
    + procesarPago()
