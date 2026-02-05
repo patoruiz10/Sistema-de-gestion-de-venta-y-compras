@@ -14,10 +14,12 @@ class Producto {
   + obtenerCodigo(codigo : int) : Producto
   + cambiarPrecio(nuevo : float)
   + asignarCategoria(Categoría)
-  + actualizarCantidadStock(idProducto : int, cantidadVendida : int)  + obtenerCantidadEnFecha(fecha : Date) : int
+  + actualizarCantidadStock(codigo : int, cantidadVendida : int)  
+  + obtenerCantidadEnFecha(fecha : Date) : int
   + obtenerCantidadRequerida() : int
   + obtenerTodosLosProductos() : List<Producto>
-  + obtenerProductoPorId(idProducto : int) : Producto
+  + obtenerProductoPorId(codigo : int) : Producto
+  + obtenerProveedor() : Proveedor
 }
 
 class Categoría {
@@ -123,7 +125,7 @@ class Controlador {
    + seleccionarMetodoPago(tipo : int)
    + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
    + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
-   + modificarCantidades(codigo : int, nuevaCantidad : int)
+   + modificarCantidades(productosModificados : List<Producto>)
    + consultarVariacionStock()
    + consultarVariacionStockPorFecha(fecha : Date)
    + validarFecha(fecha : Date) : boolean
@@ -131,7 +133,7 @@ class Controlador {
    + crearNuevoUsuario()
    + mostrarInventario()
    + crearPedidoStock()
-   + agregarProveedor(proveedorNuevo : proveedor)
+   + agregarProveedor(proveedorNuevo : Proveedor)
    + agregarProducto(productoNuevo : Producto)
    + agregarUsuario(nuevoEmpleado : Empleado)
    + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)

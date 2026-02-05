@@ -1,17 +1,17 @@
 @startuml
 !theme plain
-title Crear Pedido de Stock - SELVENT (v2.5)
+title Diagrama de Secuencia - Crear Pedido de Stock
 
-actor Empleado
-participant Controlador
-participant Producto
-participant Proveedor
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "prod:Producto" as Producto
+participant "<<multiobjeto>> categorias:Categoria" as categorias
 
 '===========================================================
 ' INICIO DEL PROCESO
 '===========================================================
 
-Empleado -> Controlador : seleccionarOpcionCrearPedidoStock()
+Empleado -> Controlador : crearPedidoStock()
 activate Controlador
 
 
@@ -19,17 +19,14 @@ activate Controlador
 '===========================================================
 ' OBTENER STOCK ACTUAL Y REQUERIDO
 '===========================================================
+loop "para cada producto de cantidad <= 10"
+    Controlador -> categorias : obtenerProducto()
+    activate categorias
+    categorias --> Controlador : <<prod:producto>>
+    deactivate categorias
 
-Controlador -> Producto : obtenerCantidad()
-activate Producto
-Producto --> Controlador : <<cantidadActual>>
-deactivate Producto
-
-Controlador -> Producto : obtenerCantidadRequerida()
-activate Producto
-Producto --> Controlador : <<cantidadRequerida>>
-deactivate Producto
-Controlador --> Empleado : <<null>>
+    Controlador --> Empleado : <<prod:producto>>
+end
 ' Controlador calcula faltantes
 '===========================================================
 ' MODIFICACIÓN DEL PEDIDO POR EL USUARIO
@@ -37,28 +34,30 @@ Controlador --> Empleado : <<null>>
 '===========================================================
 ' VALIDACIÓN
 '===========================================================
-opt No hay productos con faltante
+opt No hay productos con cantidad <= 10
     Controlador --> Empleado : <<"No existen productos con faltante de stock":string>>
-    Controlador --> Empleado : <<"Ingrese nuevas cantidades":string>>
     deactivate Controlador    
 end
 
-    Empleado -> Controlador : modificarCantidades(productosModificados)
-    activate Controlador
-    
-    '=======================================================
-    ' GENERAR PEDIDO
-    '=======================================================
-    Controlador -> Proveedor : obtenerProveedor(cuit)
-    activate Proveedor
-    Proveedor --> Controlador : <<proveedor>>
-    deactivate Proveedor
+Empleado -> Controlador : modificarCantidades(productosModificados)
+activate Controlador
 
-    ' Crear pedido (conceptual, no existe clase Pedido)
-    Controlador --> Empleado : <<productosAReponer ,cantidadesAReponer ,proveedoresAsociados , "Pedido generado correctamente":string>>
-    note right of Empleado
-    cantidadesAReponer = cantidadRequerida - cantidadActual
+'=======================================================
+' ARMADO DEL PEDIDO (producto + proveedor + cantidades)
+'=======================================================
+loop "para cada prod en productosModificados"
+note right of Empleado
+    cantidadAReponer = cantidad fijada por el empleado
+    
 end note
-    deactivate Controlador
+    Controlador -> Producto : obtenerProveedor()
+    activate Producto
+    Producto --> Controlador : <<prov:proveedor>>
+    deactivate Producto
+
+    Controlador --> Empleado : <<prod:Producto>>, <<cantidadAReponer>>, <<prov:proveedor>>
+    
+deactivate Controlador
+end
 
 @enduml
