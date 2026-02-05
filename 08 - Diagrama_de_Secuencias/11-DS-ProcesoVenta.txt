@@ -1,14 +1,15 @@
 @startuml
 !theme plain
-title Proceso de Venta - SELVENT
+title  Diagrama de Secuencia - Proceso de Venta
 
-actor Empleado
-participant Controlador
-participant Caja
-participant Venta
-participant Producto
-participant MetodoDePago
-participant Impresion
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "cj:Caja" as Caja
+participant "v:Venta" as Venta
+participant "prod:Producto" as Producto
+participant "mdp:MetodoDePago" as MetodoDePago
+participant "i:Impresion" as Impresion
+participant "<<multiobjeto>> categorias:Categoria" as categorias
 participant "<<multiobjeto>> LineasDeVenta : LineaDeVenta" as LineasDeVenta
 
 '===========================================================
@@ -16,6 +17,7 @@ participant "<<multiobjeto>> LineasDeVenta : LineaDeVenta" as LineasDeVenta
 '===========================================================
 Empleado -> Controlador : iniciarVenta()
 activate Controlador
+
 Controlador -> Venta : agregarDatos(Cliente)
 activate Venta
 Venta --> Controlador : <<"Venta iniciada":string>>
@@ -25,41 +27,63 @@ deactivate Venta
 ' CARGA DE PRODUCTOS
 '===========================================================
 loop "Cargar productos mientras el usuario desee agregar"
-    Empleado -> Controlador : ingresarCodigoProducto(codigo)
-    Controlador -> Producto : obtenerCodigo(codigo)
-    activate Producto
 
-    alt Código de producto inexistente
-        Producto --> Controlador : <<"Código inexistente, vuelva a ingresar":string>>
+    Empleado -> Controlador : ingresarCodigoProducto(codigo)
+
+    '-------------------------------------------------------
+    ' BÚSQUEDA DEL ID DEL PRODUCTO
+    '-------------------------------------------------------
+    loop "para cada producto en categorias."
+    Controlador -> categorias : buscarCodigo(codigo)
+        activate categorias
+    
+    
+            categorias --> Controlador : <<idProducto>>
+            deactivate categorias
+            note left of categorias
+              buscarCodigo(codigo):
+              - recorre internamente categorías y sus productos
+              - si encuentra coincidencia, devuelve <<idProducto>>
+              - si no encuentra, devuelve <<null>>
+              - corta iteración al encontrar un id valido.
+            end note
+        
+    end
+
+    
+
+    alt idProducto == null
         Controlador --> Empleado : <<"Código inexistente, vuelva a ingresar":string>>
 
-    else Producto encontrado
-        Producto --> Controlador : <<producto>>
+    else idProducto != null
+        '-------------------------------------------------------
+        ' OBTENER PRODUCTO COMPLETO EN OTRO LADO (Producto)
+        '-------------------------------------------------------
+        Controlador -> Producto : obtenerProductoPorId(idProducto)
+        activate Producto
+        Producto --> Controlador : <<prod:Producto>>
         deactivate Producto
 
-        ' El usuario ingresa la cantidad deseada
+        Controlador --> Empleado : <<prod:Producto>>
+        deactivate Controlador
+        '-------------------------------------------------------
+        ' OBTENER DATOS DEL PRODUCTO
+        '-------------------------------------------------------
+
+        ' El usuario ingresa cantidad
         Empleado -> Controlador : ingresarCantidad(cant)
-
-        '===================================================
-        ' CREACIÓN DE LA LÍNEA DE VENTA EN UN SOLO PASO
-        '===================================================
+        activate Controlador
+        '-------------------------------------------------------
+        ' CREAR LÍNEA DE VENTA
+        '-------------------------------------------------------
         create "lineaNueva : LineaDeVenta" as lineaNueva
-        Controlador -> lineaNueva : crearLineaVenta(producto, cant, precioUnitario)
+        Controlador -> lineaNueva : crearLineaVenta(prod:Producto, cant)
 
-        note left of lineaNueva
-            crearLineaVenta(producto, cant, precioUnitario):
-              - asigna el producto
-              - asigna la cantidad
-              - asigna el precio unitario
-              - calcula subtotal = cantidad * precioUnitario
-        end note
-        
         ' Registrar línea en el multiobjeto de líneas
         Controlador -> LineasDeVenta : agregarLineaVenta(lineaNueva)
         activate LineasDeVenta
         LineasDeVenta --> Controlador : <<null>>
         deactivate LineasDeVenta
-
 
         ' Agregar línea a la venta
         Controlador -> Venta : agregarLineaVenta(lineaNueva)
@@ -67,79 +91,98 @@ loop "Cargar productos mientras el usuario desee agregar"
         Venta --> Controlador : <<"Línea de venta agregada":string>>
         deactivate Venta
 
-
-        Controlador --> Empleado : <<"Producto agregado a la venta":string>>
+        '===========================================================
+        ' CÁLCULO DEL TOTAL
+        '===========================================================
+        Controlador -> Venta : calcularTotal()
+        activate Venta
+        Venta --> Controlador : <<total>>
+        deactivate Venta
+        Controlador --> Empleado : <<"Producto agregado a la venta":string , total>>
+        deactivate Controlador
     end
+
 end
 
-'===========================================================
-' CÁLCULO DEL TOTAL
-'===========================================================
-Empleado -> Controlador : solicitarTotal()
-Controlador -> Venta : calcularTotal()
-activate Venta
-Venta --> Controlador : <<total>>
-deactivate Venta
-Controlador --> Empleado : <<total>>
+
 
 '===========================================================
 ' SELECCIÓN Y VALIDACIÓN DEL MÉTODO DE PAGO
 '===========================================================
-Empleado -> Controlador : seleccionarMetodoPago(tipoMetodo)
-Controlador -> MetodoDePago : obtenerTipo()
-activate MetodoDePago
-MetodoDePago --> Controlador : <<tipoMetodo>>
+Empleado -> Controlador : seleccionarMetodoPago(tipo)
+activate Controlador
 
-alt Método de pago no disponible
-    deactivate MetodoDePago
+
+
+loop "para cada tipo disponible."
+    Controlador -> MetodoDePago : obtenerTipo(tipo)
+    activate MetodoDePago
+    
+    MetodoDePago --> Controlador : <<tipoDisponible : MetodoDePago>>
+        deactivate MetodoDePago
+    
+    note left of MetodoDePago
+      obtenerTipo():
+      - recorre los metodos de pagos disponibles
+      - si tipoDisponible == tipo => valido
+      - si no => null
+      - corta iteración al ser valido el tipo
+    end note
+end
+
+alt tipoDisponible == null
+
     Controlador --> Empleado : <<"Método de pago no disponible":string>>
 
-else Método de pago disponible
+else tipoDisponible != null
     deactivate MetodoDePago
-    Controlador -> Venta : registraPago(MetodoDePago)
+
+    Controlador -> Venta : registraPago(tipoDisponible)
     activate Venta
 
     alt Fondos insuficientes
         Venta --> Controlador : <<"No es posible efectuar el pago":string>>
-        
         Controlador --> Empleado : <<"No es posible efectuar el pago":string>>
+        
 
     else Proceso de pago cancelado
         Venta --> Controlador : <<"Proceso de pago cancelado":string>>
-        
         Controlador --> Empleado : <<"Proceso de pago cancelado":string>>
+        
 
     else Pago aceptado
         Venta --> Controlador : <<"Pago registrado":string>>
         deactivate Venta
 
-        '=========================
-        ' Actualización de caja
-        '=========================
-        Controlador -> Caja : balance()
-        activate Caja
-        Caja --> Controlador : <<saldoActual>>
-        deactivate Caja
-
-        '=========================
-        ' Actualización de stock (después del pago)
-        '=========================
+        '===================================================
+        ' POST-PAGO: por cada línea -> actualizar stock + balance()
+        '===================================================
         loop "Para cada línea de venta de la venta actual"
-            Controlador -> Producto : actualizarCantidadStock(codigo, cantidadVendida)
+
+            note left of Controlador
+              Se descuenta la cantidadVendida de cada producto vendido.
+            end note
+
+            Controlador -> Producto : actualizarCantidadStock(idProducto, cantidadVendida)
             activate Producto
-            Producto --> Controlador : <<"Stock actualizado":string>>
+            Producto --> Controlador : <<null>>
             deactivate Producto
+
+            Controlador -> Caja : balance()
+            activate Caja
+            Caja --> Controlador : <<saldoActual>>
+            deactivate Caja
         end
 
-        '=========================
-        ' Generación y guardado de comprobante digital
-        '=========================
+        '===================================================
+        ' Comprobante digital
+        '===================================================
         Controlador -> Impresion : generarNroTicket()
         activate Impresion
         Impresion --> Controlador : <<nroTicket>>
         deactivate Impresion
 
-        Controlador -> Impresion : guardarComprobante(Venta, nroTicket)
+        Controlador -> Impresion : guardarComprobante(v:Venta, nroTicket)
         activate Impresion
         Impresion --> Controlador : <<"Comprobante guardado":string>>
         deactivate Impresion
@@ -148,7 +191,5 @@ else Método de pago disponible
         deactivate Controlador
     end
 end
-
-
 
 @enduml
