@@ -1,33 +1,28 @@
 @startuml
 !theme plain
-title Mostrar Inventario Completo - SELVENT
+title Diagrama de Secuencia - Mostrar Inventario
 
-actor Empleado
-participant Controlador
-participant Producto
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> categorias:Categorias" as Categorias
 
 '===========================================================
 ' INICIO DEL PROCESO
 '===========================================================
-
-Empleado -> Controlador : seleccionarOpcionMostrarInventario()
+Empleado -> Controlador : mostrarInventario()
 activate Controlador
 
 '===========================================================
-' OBTENER LISTA DE PRODUCTOS
+' OBTENER INVENTARIO COMPLETO
 '===========================================================
-
-Controlador -> Producto : obtenerTodosLosProductos()
-activate Producto
-Producto --> Controlador : <<listaProductos>>
-deactivate Producto
+Controlador -> Categorias : obtenerTodosLosProductos()
+activate Categorias
+Categorias --> Controlador : << inventarioCompleto : List<Producto> >>
+deactivate Categorias
 
 '===========================================================
 ' MOSTRAR INVENTARIO AL USUARIO
 '===========================================================
-
-Controlador --> Empleado : <<listaProductos, "Inventario mostrado correctamente":string>>
-
+Controlador --> Empleado : <<inventarioCompleto: List<Producto>, "Inventario mostrado correctamente":string>>
 deactivate Controlador
-
 @enduml

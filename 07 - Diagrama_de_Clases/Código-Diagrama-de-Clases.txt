@@ -17,7 +17,6 @@ class Producto {
   + actualizarCantidadStock(codigo : int, cantidadVendida : int)  
   + obtenerCantidadEnFecha(fecha : Date) : int
   + obtenerCantidadRequerida() : int
-  + obtenerTodosLosProductos() : List<Producto>
   + obtenerProductoPorId(codigo : int) : Producto
   + obtenerProveedor() : Proveedor
 }
@@ -26,6 +25,7 @@ class Categoría {
     - nombreCategoria : string
     - productos : List<Producto>
     + obtenerCategoria(nombreCategoria : string) : Categoría
+    + obtenerTodosLosProductos() : List<Producto>
     + buscarCodigo(codigo : int) : int
     + crearCategoria(nombre)
     + eliminarProducto(p : Producto)

@@ -1,18 +1,11 @@
 @startuml
 !theme plain
-title Actualizar Cantidad de Producto - SELVENT
+title Diagrama de Secuencia - Actualizar Cantidad de Producto
 
-actor Empleado
-participant Controlador
-participant Producto
-
-'===========================================================
-' INICIO DEL PROCESO
-'===========================================================
-Empleado -> Controlador : seleccionarOpcionActualizarCantidad()
-activate Controlador
-Controlador --> Empleado : <<null>>
-deactivate Controlador
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> categorias:Categorias" as Categorias
+participant "prod:Producto" as Producto
 
 '===========================================================
 ' INGRESO DE DATOS DE ACTUALIZACIÓN
@@ -23,32 +16,32 @@ activate Controlador
 '===========================================================
 ' VALIDACIÓN DE CANTIDAD
 '===========================================================
-alt Cantidad negativa o no válida
-    Controlador --> Empleado : <<"La cantidad ingresada no es válida":string>>
-
-else Cantidad válida
-
+alt Cantidad < 0
+    Controlador --> Empleado : <<"La cantidad ingresada no es válida.":string>>
+else Cantidad >= 0
     '=======================================================
-    ' ACTUALIZACIÓN DIRECTA EN EL CATÁLOGO DE PRODUCTOS
+    ' BÚSQUEDA DEL PRODUCTO POR CÓDIGO (LOOP)
     '=======================================================
-    Controlador -> Producto : actualizarCantidadStock(codigo, nuevaCantidad)
-    activate Producto
+    loop "Buscar producto por código"
+        Controlador -> Categorias : buscarCodigo(codigo)
+        activate Categorias
+        Categorias --> Controlador : <<prod:Producto>>
+        deactivate Categorias
+    end
 
     alt Producto no encontrado
-        Producto --> Controlador : <<"Producto no encontrado":string>>
-        
-
         Controlador --> Empleado : <<"El código de producto ingresado no existe":string>>
-
-    else Producto actualizado
+    else Producto encontrado
+        '===================================================
+        ' ACTUALIZACIÓN DEL STOCK
+        '===================================================
+        Controlador -> Producto : actualizarCantidadStock(nuevaCantidad)
+        activate Producto
         Producto --> Controlador : <<"Cantidad actualizada correctamente":string>>
         deactivate Producto
 
         Controlador --> Empleado : <<"Producto actualizado correctamente":string>>
         deactivate Controlador
     end
-    
 end
-
-
 @enduml
