@@ -15,10 +15,10 @@ class Producto {
   + cambiarPrecio(nuevo : float)
   + asignarCategoria(Categoría)
   + actualizarCantidadStock(codigo : int, cantidadVendida : int)  
-  + obtenerCantidadEnFecha(fecha : Date) : int
   + obtenerCantidadRequerida() : int
   + obtenerProductoPorId(codigo : int) : Producto
-  + obtenerProveedor() : Proveedor
+  + obtenerProveedor() : Proveedor 
+  
 }
 
 class Categoría {
@@ -26,7 +26,7 @@ class Categoría {
     - productos : List<Producto>
     + obtenerCategoria(nombreCategoria : string) : Categoría
     + obtenerTodosLosProductos() : List<Producto>
-    + buscarCodigo(codigo : int) : int
+    + buscarCodigo(codigo : int) : Producto
     + crearCategoria(nombre)
     + eliminarProducto(p : Producto)
     + agregarProducto(p : Producto)
@@ -126,8 +126,7 @@ class Controlador {
    + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
    + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
    + modificarCantidades(productosModificados : List<Producto>)
-   + consultarVariacionStock()
-   + consultarVariacionStockPorFecha(fecha : Date)
+   + consultarVariacionStock(fecha : Date)
    + validarFecha(fecha : Date) : boolean
    + consultarHistorialVentas(fecha : Date)
    + crearNuevoUsuario()
@@ -137,6 +136,7 @@ class Controlador {
    + agregarProducto(productoNuevo : Producto)
    + agregarUsuario(nuevoEmpleado : Empleado)
    + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
+   
 }
 class Persona{
   - nombre : String
@@ -154,10 +154,24 @@ class Proveedor {
   + mostrarInfo() : String
   + contactar() : void
   + registrarEntrega(fecha : Date) : void
-  
 }
-' ==== RELACIONES ====
 
+
+class HistorialStockDiario {
+  - registros : List<RegistroStock>
+  + registrarCorte(fecha:Date, inventario:List<Producto>) : void
+  + obtenerStockEnFecha(codigo : int, fecha : Date) : int
+}
+
+class RegistroStock {
+  - fecha : Date
+  - codigoProducto : int
+  - cantidad : int
+}
+
+
+
+' ==== RELACIONES ====
 Producto "1..1" -- "1..*" Categoría : Pertenece a
 
 Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
@@ -171,6 +185,11 @@ Venta "1..1" *-- "1..1" Impresion : solicita
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 Controlador "1..1" -- "1..*" Caja : supervisada
 Producto "1..*" -- "1..*" Proveedor : suministrado_por
+
+Controlador "1..1" -- "1..1" HistorialStockDiario : usa
+
+HistorialStockDiario "1 1" -- " 0..* " RegistroStock : almacena
+
 Empleado --|> Persona
 Cliente --|> Persona
 Proveedor --|> Persona
