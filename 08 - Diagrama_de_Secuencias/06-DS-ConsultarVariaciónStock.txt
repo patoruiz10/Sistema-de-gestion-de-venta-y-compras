@@ -1,77 +1,43 @@
 ﻿@startuml
 !theme plain
-title Consultar Variación del Stock - SELVENT (v2.5)
+title Diagrama de Secuencia - Consultar Variación del Stock
 
-actor Empleado
-participant Controlador
-participant Producto
-
-'===========================================================
-' INICIO DEL PROCESO
-'===========================================================
-
-Empleado -> Controlador : seleccionarOpcionConsultarVariacionStock()
-activate Controlador
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> cat:Categorias" as Categorias
+participant "hsd:HistorialStockDiario" as Historial
 
 '===========================================================
-' OBTENER DATOS ACTUALES Y ANTERIORES
+' INICIO DEL PROCESO (CONSULTA GENERAL)
 '===========================================================
-
-Controlador -> Producto : obtenerCantidad()
-activate Producto
-Producto --> Controlador : <<existenciasActuales>>
-deactivate Producto
-
-Controlador -> Producto : obtenerCantidadEnFecha(fechaMesAnterior)
-activate Producto
-Producto --> Controlador : <<existenciasMesAnterior>>
-note right of Producto
-    obtenerCantidadEnFecha(fecha)
-    consulta el historial de movimientos
-    de ese producto
-end note
-deactivate Producto
-
-Controlador -> Producto : obtenerCantidadRequerida()
-activate Producto
-Producto --> Controlador : <<cantidadMensualRequerida>>
-deactivate Producto
-
-Controlador --> Empleado : <<"Mostrar datos de stock actual y mes anterior":string>>
-deactivate Controlador
-'===========================================================
-' INGRESO DE FECHA
-'===========================================================
-
 Empleado -> Controlador : consultarVariacionStock(fecha)
 activate Controlador
 
 '===========================================================
-' VALIDACIÓN DE FECHA (SIN AUTO LLAMADO)
+' OBTENER CATÁLOGO COMPLETO
 '===========================================================
+Controlador -> Categorias : obtenerTodosLosProductos()
+activate Categorias
+Categorias --> Controlador : listaProductos : List<Producto>
+deactivate Categorias
 
-' Validación interna realizada por el Controlador (sin autollamado)
+'===========================================================
+' LOOP: POR CADA PRODUCTO, OBTENER DATOS ACTUAL Y MES ANTERIOR
+'===========================================================
+loop "Por cada producto en listaProductos"
+  Controlador -> Historial : obtenerStockEnFecha(codigo, fecha)
+  activate Historial
+    Historial --> Controlador : <<cantidadEnFecha:int>>
+  deactivate Historial
 
-alt Fecha futura
-    Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
-    Controlador --> Empleado : <<"Ingrese una nueva fecha":string>>
-
-else Fecha válida
-
-    '=======================================================
-    ' OBTENER VARIACIÓN SEGÚN FECHA
-    '=======================================================
-    Controlador -> Producto : obtenerCantidadEnFecha(fecha)
-    activate Producto
-    Producto --> Controlador : <<cantidadEnFecha>>
-    deactivate Producto
-
-    ' Controlador calcula variación internamente
-
-    Controlador --> Empleado : <<variacionStock, "Variación de stock mostrada correctamente":string>>
-    deactivate Controlador
+  note right of Controlador
+    variacion =  cantidadEnFecha - cantidadActual
+    listaVariaciones = codigo, descripcion, cantidadActual, cantidadEnFecha, variacion
+  end note
 end
-    note right of Empleado
-        variacionStock = cantidadMensualRequerida - cantidadEnFecha
-end note
+
+Controlador --> Empleado : <<listaVariaciones, "Variación de stock mostrada correctamente":string>>
+deactivate Controlador
+
+
 @enduml
