@@ -1,59 +1,54 @@
 @startuml
 !theme plain
-title Consulta de Historial de Ventas - SELVENT
+title Diagrama de Secuencia - Consulta de Historial de Ventas 
 
-actor Empleado
-participant Controlador
-participant Venta
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> cs:Caja" as Cajas
+participant "cj:Caja" as Caja
 
-'===========================================================
-' INICIO DEL PROCESO
-'===========================================================
-
-Empleado -> Controlador : seleccionarOpcionHistorialVentas()
-activate Controlador
-
-Controlador --> Empleado : <<null>>
-deactivate Controlador
 '===========================================================
 ' USUARIO INGRESA FECHA
 '===========================================================
-
 Empleado -> Controlador : consultarHistorialVentas(fecha)
 activate Controlador
+
 '===========================================================
 ' VALIDACIONES
 '===========================================================
+alt Fecha == null
+  Controlador --> Empleado : <<"Falta completar la fecha":string>>
 
-alt Fecha no ingresada
-    Controlador --> Empleado : <<"Falta completar la fecha":string>>
 
-else Fecha futura
-    Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
+else Fecha futura al dia actual
+  Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
+
 
 else Fecha válida
+  '=========================================================
+  ' CONSULTAR VENTAS POR FECHA (TODAS LAS CAJAS)
+  '=========================================================
+  Controlador -> Cajas : obtenerVentasPorFecha(fecha)
+  activate Cajas
 
-    '=======================================================
-    ' CONSULTAR VENTAS POR FECHA
-    '=======================================================
-    Controlador -> Venta : obtenerVentasPorFecha(fecha)
-    activate Venta
+  loop "Por cada caja del sistema"
+    Cajas -> Caja : obtenerVentasPorFecha(fecha)
+    activate Caja
+    Caja --> Cajas : ventasCaja : List<Venta>
+    deactivate Caja
+  end
+  
+note right of Cajas
+  Se acumulan las listas
+  ventasCaja en listaVentas
+end note
 
-    alt No hay ventas registradas
-        Venta --> Controlador : <<"Sin ventas":string>>
-        
+  Cajas --> Controlador : listaVentas : List<Venta>
+  deactivate Cajas
 
-        Controlador --> Empleado : <<"No se encontraron ventas para la fecha consultada":string>>
+Controlador --> Empleado : <<listaVentas, "Ventas mostradas correctamente":string>>
 
-    else Ventas encontradas
-        Venta --> Controlador : <<listaVentas>>
-        deactivate Venta
-
-        Controlador --> Empleado : <<listaVentas, "Ventas mostradas correctamente":string>>
-        deactivate Controlador
-    end
+  deactivate Controlador
 end
-
-
 
 @enduml
