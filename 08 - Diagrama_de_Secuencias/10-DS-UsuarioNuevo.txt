@@ -2,22 +2,14 @@
 !theme plain
 title Diagrama de Secuencia - Crear nuevo usuario
 
-actor Empleado
-participant Controlador
-participant "<<multiobjeto>> Usuarios : Empleado" as Usuarios
-
-'===========================================================
-' INICIO DEL PROCESO
-'===========================================================
-Empleado -> Controlador : seleccionarOpcionCrearNuevoUsuario()
-activate Controlador
-Controlador --> Empleado : <<null>>
-deactivate Controlador
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> em : Empleado" as Usuarios
 
 '===========================================================
 ' INGRESO DE DATOS
 '===========================================================
-Empleado -> Controlador : crearNuevoUsuario(usuario, contraseña, rol)
+Empleado -> Controlador : crearNuevoUsuario(nombre, telefono, dni, usuario, contraseña, rol)
 activate Controlador
 
 '===========================================================
@@ -32,19 +24,18 @@ else Campos válidos
     ' CREACIÓN DEL NUEVO EMPLEADO (NUEVA ENTIDAD)
     '=======================================================
     create "nuevoUsuario : Empleado" as nuevoEmpleado
-    Controlador -> nuevoEmpleado : crearUsuario(usuario, contraseña, rol)
+    Controlador -> nuevoEmpleado : create(nombre, telefono, dni, usuario, contraseña, rol)
     
-
     '=======================================================
     ' AGREGAR AL MULTIOBJETO DE USUARIOS
     '=======================================================
-    Controlador -> Usuarios : agregarUsuario(nuevoUsuario: Empleado)
+    Controlador -> Usuarios : agregarUsuario(nuevoEmpleado: Empleado)
     activate Usuarios
     Usuarios --> Controlador : <<null>>
     deactivate Usuarios
 
     '=======================================================
-    ' CONFIRMACIÓN DE REGISTRO
+    ' CONFIRMACIÓN DE REGISTRO         
     '=======================================================
     Controlador --> Empleado : <<"Usuario creado correctamente":string>>
     deactivate Controlador
