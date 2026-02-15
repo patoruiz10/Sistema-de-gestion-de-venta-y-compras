@@ -18,18 +18,20 @@ class Producto {
   + obtenerCantidadRequerida() : int
   + obtenerProductoPorId(codigo : int) : Producto
   + obtenerProveedor() : Proveedor 
+  + agregarProducto(p:Producto) : void
   
 }
 
 class Categoría {
     - nombreCategoria : string
     - productos : List<Producto>
-    + obtenerCategoria(nombreCategoria : string) : Categoría
+    + obtenerCategoria(nombreCategoria:string) : String
     + obtenerTodosLosProductos() : List<Producto>
-    + buscarCodigo(codigo : int) : Producto
+    + buscarCodigo(codigo:int) : int
     + crearCategoria(nombre)
     + eliminarProducto(p : Producto)
-    + agregarProducto(p : Producto)
+    + agregarProducto(p : Producto) : void
+    
     
 
 }
@@ -40,6 +42,8 @@ class Cliente {
  - telefono : int
  - dni : int
  + crearCliente(nombre,telefono,dni,condicionIVA)
+ + buscarCliente(dni:int) : int
+ + obtenerClientePorDni(dni:int) : Cliente
  + mostrarInfo()
  + iniciaCompra()
 }
@@ -50,6 +54,7 @@ class Venta {
   - lineaVenta : String
   - descuento
   - pago
+  + iniciaVenta() : String
   + agregarMetododePago(MetodoDePago)
   + agregarDatos(Cliente)
   + agregarLineaVenta(LineaDeVenta)
@@ -82,7 +87,6 @@ class Empleado {
   + introducirCredenciales(usuario,contraseña)
   + crearUsuario(usuario,contraseña,rol)
   + mostrarInfo()
-  + iniciaVenta() : boolean
   + finalizaVenta() : boolean 
 }
 
@@ -108,6 +112,7 @@ class Impresion {
 }
 
 class Controlador {
+   + crearNuevaVenta() : Venta
    + inicioSesion(usuario:string, contraseña:string) : boolean
    + cierraSesion() : boolean
    + validarPago() : boolean
@@ -136,7 +141,9 @@ class Controlador {
    + agregarProducto(productoNuevo : Producto)
    + agregarUsuario(nuevoEmpleado : Empleado)
    + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
-   
+   + agregarCliente(c:Cliente) : void
+
+
 }
 class Persona{
   - nombre : String
@@ -149,7 +156,7 @@ class Proveedor {
   - cuit : int
   - telefono : int
   - direccion : String
-  + obtenerProveedor(cuit : int) : Proveedor
+  + obtenerProveedor(cuit : int) : int
   + crearProveedor(nombre,telefono,cuit,mail,direccion)
   + mostrarInfo() : String
   + contactar() : void

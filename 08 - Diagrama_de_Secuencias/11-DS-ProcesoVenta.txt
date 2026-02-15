@@ -4,24 +4,99 @@ title  Diagrama de Secuencia - Proceso de Venta
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
+
+participant "<<multiobjeto>> clientes:Cliente" as Clientes
+participant "cli:Cliente" as Cliente
+
 participant "cj:Caja" as Caja
-participant "v:Venta" as Venta
 participant "prod:Producto" as Producto
 participant "mdp:MetodoDePago" as MetodoDePago
 participant "i:Impresion" as Impresion
 participant "<<multiobjeto>> categorias:Categoria" as categorias
 participant "<<multiobjeto>> LineasDeVenta : LineaDeVenta" as LineasDeVenta
 
+
 '===========================================================
 ' INICIO DEL PROCESO DE VENTA
 '===========================================================
-Empleado -> Controlador : iniciarVenta()
+Empleado -> Controlador : crearNuevaVenta()
+activate Controlador
+    
+    create "v:Venta" as Venta
+    Controlador -> Venta : create()
+
+    
+    Controlador -> Venta : iniciarVenta()
+    note right of Venta
+        Se asume fechaHora = now() al crear/inicializar
+    end note
+    
+    activate Venta
+        Venta --> Controlador : <<"Venta creada e iniciada":string>>
+    deactivate Venta
+    
+    Controlador --> Empleado : <<"Venta iniciada":string>>
+deactivate Controlador
+
+
+
+
+
+
+
+Empleado -> Controlador : crearCliente(nombre, telefono, dni, condicionIVA)
 activate Controlador
 
-Controlador -> Venta : agregarDatos(Cliente)
-activate Venta
-Venta --> Controlador : <<"Venta iniciada":string>>
-deactivate Venta
+alt Algún campo obligatorio está vacío
+  Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
+else Datos completos
+
+  '---------------------------------------------------------
+  ' BÚSQUEDA DE CLIENTE (LOOP) EN MULTIOBJETO CLIENTES
+  '---------------------------------------------------------
+  loop "Para cada cliente en Clientes"
+    Controlador -> Clientes : buscarCliente(dni)
+    activate Clientes
+    Clientes --> Controlador : <<dniCliente:int>>
+    deactivate Clientes
+
+    note right of Controlador
+    buscarCliente(dni):
+      - recorre clientes
+      - si encuentra coincidencia, devuelve <<dniCliente>>
+      - si no encuentra, devuelve <<null>>
+      - corta iteración al encontrar un Cliente valido.
+      end note
+  end
+
+  alt dniCliente != null (Cliente existente)
+    Controlador -> Clientes : obtenerClientePorDni(dniCliente)
+    activate Clientes
+    Clientes --> Controlador : <<cli:Cliente>>
+    deactivate Clientes
+
+    Controlador -> Venta : agregarDatos(cli:Cliente)
+    activate Venta
+    Venta --> Controlador : <<"Venta iniciada":string>>
+    deactivate Venta
+
+  else dniCliente == null (Cliente nuevo)
+    create "cliNuevo:Cliente" as cliNuevo
+    Controlador -> cliNuevo : create(nombre, telefono, dni, condicionIVA)
+
+    Controlador -> Clientes : agregarCliente(cliNuevo)
+    activate Clientes
+    Clientes --> Controlador : <<null>>
+    deactivate Clientes
+
+    Controlador -> Venta : agregarDatos(cliNuevo)
+    activate Venta
+    Venta --> Controlador : <<"Venta iniciada":string>>
+    deactivate Venta
+  end
+    Controlador --> Empleado : <<"Venta iniciada":string>>
+    deactivate Controlador
+end
 
 '===========================================================
 ' CARGA DE PRODUCTOS
@@ -29,7 +104,7 @@ deactivate Venta
 loop "Cargar productos mientras el usuario desee agregar"
 
     Empleado -> Controlador : ingresarCodigoProducto(codigo)
-
+    activate Controlador
     '-------------------------------------------------------
     ' BÚSQUEDA DEL ID DEL PRODUCTO
     '-------------------------------------------------------
@@ -77,7 +152,7 @@ loop "Cargar productos mientras el usuario desee agregar"
         ' CREAR LÍNEA DE VENTA
         '-------------------------------------------------------
         create "lineaNueva : LineaDeVenta" as lineaNueva
-        Controlador -> lineaNueva : crearLineaVenta(prod:Producto, cant)
+        Controlador -> lineaNueva : create(prod:Producto, cant)
 
         ' Registrar línea en el multiobjeto de líneas
         Controlador -> LineasDeVenta : agregarLineaVenta(lineaNueva)
