@@ -6,10 +6,12 @@
 
 ### Camino básico: 
 1. El usuario selecciona la opción de “Cierre de caja”.
-2. El sistema informa mediante una alerta visual que se hizo el “cierre de caja con (fecha y hora).” y muestra un informe con todas las ventas realizadas en el día.
+2. El sistema informa mediante una alerta que se hizo el cierre de caja con (fecha y hora).
            
 ### Caminos alternativos:
-* No tiene.
+2.a La caja ya se encuentra cerrada.
+2.a.1 El sistema muestra un mensaje que informa sobre si la caja ya está cerrada".
+2.a.2 Fin del caso de uso.
 
 ### Escenario de éxito:
 - El usuario pudo cerrar la caja.

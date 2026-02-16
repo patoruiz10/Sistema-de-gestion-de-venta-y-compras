@@ -1,0 +1,29 @@
+@startuml
+!theme plain
+title Diagrama de Secuencia - Apertura de Caja
+
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "cj:Caja" as Caja
+
+' Precondición: usuario logueado
+
+Empleado -> Controlador : abrirCaja()
+activate Controlador
+
+Controlador -> Caja : abrirCaja()
+activate Caja
+Caja --> Controlador : <<estado:bool>>
+deactivate Caja
+
+alt estado de la caja == false
+  Controlador --> Empleado : <<"La caja ya está abierta":string>>
+else estado de la caja == true
+  note right of Controlador
+    fechaHora = now()
+  end note
+  Controlador --> Empleado : <<"Caja abierta correctamente (fecha y hora)":string>>
+  deactivate Controlador
+end
+
+@enduml

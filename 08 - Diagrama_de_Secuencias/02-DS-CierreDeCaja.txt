@@ -1,0 +1,27 @@
+@startuml
+!theme plain
+title Diagrama de Secuencia - Cierre de Caja
+
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "cj:Caja" as Caja
+
+Empleado -> Controlador : cerrarCaja()
+activate Controlador
+
+Controlador -> Caja : cerrarCaja()
+activate Caja
+Caja --> Controlador : <<estado:bool>>
+deactivate Caja
+
+alt estado de la caja == false
+  Controlador --> Empleado : <<"La caja ya está cerrada":string>>
+else estado de la caja == true
+  note right of Controlador
+    fechaHora = now()
+  end note
+  Controlador --> Empleado : <<"Cierre de caja realizado con éxito (fecha y hora)":string>>
+  deactivate Controlador
+end
+
+@enduml
