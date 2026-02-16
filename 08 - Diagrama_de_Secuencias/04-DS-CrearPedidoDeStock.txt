@@ -4,60 +4,59 @@ title Diagrama de Secuencia - Crear Pedido de Stock
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> categorias:Categoría" as Categorias
 participant "prod:Producto" as Producto
-participant "<<multiobjeto>> categorias:Categoria" as categorias
 
 '===========================================================
 ' INICIO DEL PROCESO
 '===========================================================
-
 Empleado -> Controlador : crearPedidoStock()
-activate Controlador
-
-
+    activate Controlador
 
 '===========================================================
-' OBTENER STOCK ACTUAL Y REQUERIDO
+' OBTENER LISTA DE PRODUCTOS (desde Categoría)
 '===========================================================
-loop "para cada producto de cantidad <= 10"
-    Controlador -> categorias : obtenerProducto()
-    activate categorias
-    categorias --> Controlador : <<prod:producto>>
-    deactivate categorias
+        Controlador -> Categorias : obtenerTodosLosProductos()
+        activate Categorias
+        Categorias --> Controlador : <<listaProductos : List<Producto>>>
+        deactivate Categorias
 
-    Controlador --> Empleado : <<prod:producto>>
-end
-' Controlador calcula faltantes
-'===========================================================
-' MODIFICACIÓN DEL PEDIDO POR EL USUARIO
-'===========================================================
-'===========================================================
-' VALIDACIÓN
-'===========================================================
-opt No hay productos con cantidad <= 10
-    Controlador --> Empleado : <<"No existen productos con faltante de stock":string>>
-    deactivate Controlador    
+            note right of Controlador
+              Filtra listaProductos:
+              faltantes = productos donde (cantidadActual <= 10)
+            end note
+
+        alt faltantes vacía
+          Controlador --> Empleado : <<"No existen productos con faltante de stock. Puede ajustar manualmente si desea generar un pedido":string>>
+        else faltantes con datos
+          Controlador --> Empleado : <<faltantes : List<Producto>>>
+    deactivate Controlador
 end
 
+
+'===========================================================
+' PASO 3: USUARIO MODIFICA CANTIDADES Y CONFIRMA
+'===========================================================
 Empleado -> Controlador : modificarCantidades(productosModificados)
 activate Controlador
 
-'=======================================================
-' ARMADO DEL PEDIDO (producto + proveedor + cantidades)
-'=======================================================
+'===========================================================
+' PASO 4: ARMADO DEL DETALLE (producto + proveedor + cantidades)
+'===========================================================
 loop "para cada prod en productosModificados"
-note right of Empleado
+  note right of Empleado
     cantidadAReponer = cantidad fijada por el empleado
-    
-end note
-    Controlador -> Producto : obtenerProveedor()
-    activate Producto
-    Producto --> Controlador : <<prov:proveedor>>
-    deactivate Producto
+  end note
 
-    Controlador --> Empleado : <<prod:Producto>>, <<cantidadAReponer>>, <<prov:proveedor>>
-    
+  Controlador -> Producto : obtenerProveedor()
+  activate Producto
+  Producto --> Controlador : <<prov:Proveedor>>
+  deactivate Producto
+
+  Controlador --> Empleado : <<prod:Producto>>, <<cantidadAReponer:int>>, <<prov:Proveedor>>
 deactivate Controlador
 end
+
+
 
 @enduml

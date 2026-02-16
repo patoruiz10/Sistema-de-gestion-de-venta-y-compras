@@ -1,7 +1,6 @@
 @startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Selvent
-
+title Diagrama de Clases - Selvent (agrupado, DS ordenado, sin DS visible)
 ' ==== CLASES ====
 
 class Producto {
@@ -10,30 +9,63 @@ class Producto {
   - categoria : string
   - cantidad : int
   - precioUnitario : float
+
+  ' ---------------------------
+  ' DS-04 Crear Pedido de Stock
+  ' ---------------------------
+  + obtenerCantidadRequerida() : int
+  + obtenerProveedor() : Proveedor
+
+  ' ---------------------------
+  ' DS-05 Actualizar Cantidad de Producto
+  ' ---------------------------
+  + modificarCantidadStock(nuevaCantidad : int) : string
+  
+  ' ---------------------------
+  ' DS-09 Registrar Producto Nuevo
+  ' ---------------------------
   + crearProducto(codigo : int, descripcion : string, cantidad : int, precioUnitario : float, proveedor : Proveedor, categoria : Categoría) : Producto
+  + agregarProducto(p:Producto) : void
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
+  + obtenerProductoPorId(codigo : int) : Producto
+  + actualizarCantidadStock(codigo : int, cantidadVendida : int)
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
   + obtenerCodigo(codigo : int) : Producto
   + cambiarPrecio(nuevo : float)
   + asignarCategoria(Categoría)
-  + actualizarCantidadStock(codigo : int, cantidadVendida : int)  
-  + obtenerCantidadRequerida() : int
-  + obtenerProductoPorId(codigo : int) : Producto
-  + obtenerProveedor() : Proveedor 
-  + agregarProducto(p:Producto) : void
-  
 }
 
 class Categoría {
-    - nombreCategoria : string
-    - productos : List<Producto>
-    + obtenerCategoria(nombreCategoria:string) : String
-    + obtenerTodosLosProductos() : List<Producto>
-    + buscarCodigo(codigo:int) : int
-    + crearCategoria(nombre)
-    + eliminarProducto(p : Producto)
-    + agregarProducto(p : Producto) : void
-    
-    
+  - nombreCategoria : string
+  - productos : List<Producto>
 
+  ' ---------------------------
+  ' DS-04 y DS-08 Crear Pedido de Stock
+  ' ---------------------------
+  + obtenerTodosLosProductos() : List<Producto>
+
+  ' ---------------------------
+  ' DS-05 Actualizar Cantidad de Producto y DS-09 Registrar Producto Nuevo
+  ' ---------------------------
+  + buscarCodigo(codigo:int) : int
+
+  ' ---------------------------
+  ' DS-09 Registrar Producto Nuevo
+  ' ---------------------------
+  + obtenerCategoria(nombreCategoria:string) : String
+  + agregarProducto(p : Producto) : void
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
+  + crearCategoria(nombre)
+  + eliminarProducto(p : Producto)
 }
 
 class Cliente {
@@ -41,11 +73,19 @@ class Cliente {
  - nombre : String
  - telefono : int
  - dni : int
- + crearCliente(nombre,telefono,dni,condicionIVA)
- + buscarCliente(dni:int) : int
- + obtenerClientePorDni(dni:int) : Cliente
- + mostrarInfo()
- + iniciaCompra()
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
+  + crearCliente(nombre,telefono,dni,condicionIVA)
+  + buscarCliente(dni:int) : int
+  + obtenerClientePorDni(dni:int) : Cliente
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
+  + mostrarInfo()
+  + iniciaCompra()
 }
 
 class Venta {
@@ -54,27 +94,52 @@ class Venta {
   - lineaVenta : String
   - descuento
   - pago
+
+  ' ---------------------------
+  ' DS-02 Cierre de Caja (soporte de consulta)
+  ' ---------------------------
+  + generarInformeDiario()
+  
+  ' ---------------------------
+  ' DS-07 Consulta Historial de Ventas
+  ' ---------------------------
+  + obtenerVentasPorFecha(fecha : Date) : List<Venta>
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
   + iniciaVenta() : String
-  + agregarMetododePago(MetodoDePago)
   + agregarDatos(Cliente)
   + agregarLineaVenta(LineaDeVenta)
-  + eliminarLinea(LineaDeVenta)
+  + calcularTotal() : float
   + registraPago(MetodoDePago)
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
+  + eliminarLinea(LineaDeVenta)
+  + agregarMetododePago(MetodoDePago)
   + obtenerSubtotal() : float
   + aplicarDescuento(d : float)
   + quitarDescuento(d : float)
-  + calcularTotal() : float
-  + obtenerVentasPorFecha(fecha : Date) : List<Venta>
 }
 
 class LineaDeVenta {
   - cantidad : int
   - precioUnitario : float
   - Subtotal : float
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
   + crearLineaVenta(producto : Producto, cant : int) : LineaDeVenta
+  + calcularSubtotal() : float
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
   + actualizarCantidad(cant : int)
   + actualizarPrecioUnitario (precioU : float)
-  + calcularSubtotal() : float
 }
 
 class Empleado {
@@ -84,90 +149,179 @@ class Empleado {
   - telefono : int
   - dni : int
   - rol : String
+
+  ' ---------------------------
+  ' DS-01 Apertura de Caja
+  ' ---------------------------
   + introducirCredenciales(usuario,contraseña)
+
+  ' ---------------------------
+  ' DS-10 Crear nuevo usuario
+  ' ---------------------------
   + crearUsuario(usuario,contraseña,rol)
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
   + mostrarInfo()
-  + finalizaVenta() : boolean 
+  + finalizaVenta() : boolean
 }
 
 class Caja {
   - numero : int
   - saldoActual : float
   - estado: bool
-  + balance()
+
+  ' ---------------------------
+  ' DS-01 Apertura de Caja
+  ' ---------------------------
   + abrirCaja() : boolean
+
+  ' ---------------------------
+  ' DS-02 Cierre de Caja
+  ' ---------------------------
   + cerrarCaja() : boolean
+  + registrarCierre()
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta (post-pago)
+  ' ---------------------------
+  + balance()
 }
 
 class MetodoDePago {
   - tipo : int
   - detalles : String
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
   + obtenerTipo(tipo : int) : MetodoDePago
 }
+
 class Impresion {
-    - nroTicket : int
-    - empleado : Empleado
-    + generarNroTicket () : int 
-    + guardarComprobante(v : Venta, nroTicket : int) : string
+  - nroTicket : int
+  - empleado : Empleado
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
+  + generarNroTicket () : int
+  + guardarComprobante(v : Venta, nroTicket : int) : string
 }
 
 class Controlador {
-   + crearNuevaVenta() : Venta
-   + inicioSesion(usuario:string, contraseña:string) : boolean
-   + cierraSesion() : boolean
-   + validarPago() : boolean
-   + procesarPago()
-   + añadirProducto(p : Producto)
-   + eliminarProducto(p : Producto)
-   + buscarProducto(p : Producto)
-   + actualizarProducto(p : Producto)
-   + validarCredenciales()
-   + registrarCierre()
-   + generarInformeDiario()
-   + ingresarCodigoProducto(codigo : int)
-   + calcularTotal()
-   + ingresarCantidad(cant : int)
-   + seleccionarMetodoPago(tipo : int)
-   + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
-   + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
-   + modificarCantidades(productosModificados : List<Producto>)
-   + consultarVariacionStock(fecha : Date)
-   + validarFecha(fecha : Date) : boolean
-   + consultarHistorialVentas(fecha : Date)
-   + crearNuevoUsuario()
-   + mostrarInventario()
-   + crearPedidoStock()
-   + agregarProveedor(proveedorNuevo : Proveedor)
-   + agregarProducto(productoNuevo : Producto)
-   + agregarUsuario(nuevoEmpleado : Empleado)
-   + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
-   + agregarCliente(c:Cliente) : void
 
+  ' ---------------------------
+  ' DS-01 Apertura de Caja
+  ' ---------------------------
+  + inicioSesion(usuario:string, contraseña:string) : boolean
+  + validarCredenciales()
+  + cierraSesion() : boolean
 
+  ' ---------------------------
+  ' DS-03 Registrar Proveedor Nuevo
+  ' ---------------------------
+  + registrarProveedor(nombre : string, telefono : int, cuit : int, mail : string, direccion : string)
+  + agregarProveedor(proveedorNuevo : Proveedor)
+
+  ' ---------------------------
+  ' DS-04 Crear Pedido de Stock
+  ' ---------------------------
+  + crearPedidoStock()
+  + modificarCantidades(productosModificados : List<Producto>)
+
+  ' ---------------------------
+  ' DS-05 Actualizar Cantidad de Producto
+  ' ---------------------------
+  + buscarProducto(p : Producto)
+  + modificarCantidad(codigo:int, nuevaCantidad:int) : string
+  + actualizarProducto(p : Producto)
+
+  ' ---------------------------
+  ' DS-06 Consultar Variación del Stock
+  ' ---------------------------
+  + consultarVariacionStock(fecha : Date)
+  + validarFecha(fecha : Date) : boolean
+
+  ' ---------------------------
+  ' DS-07 Consulta Historial de Ventas
+  ' ---------------------------
+  + consultarHistorialVentas(fecha : Date)
+
+  ' ---------------------------
+  ' DS-08 Mostrar Inventario
+  ' ---------------------------
+  + mostrarInventario()
+
+  ' ---------------------------
+  ' DS-09 Registrar Producto Nuevo
+  ' ---------------------------
+  + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
+  + agregarProducto(productoNuevo : Producto)
+  + eliminarProducto(p : Producto)
+  + añadirProducto(p : Producto)
+
+  ' ---------------------------
+  ' DS-10 Crear nuevo usuario
+  ' ---------------------------
+  + crearNuevoUsuario()
+  + agregarUsuario(nuevoEmpleado : Empleado)
+
+  ' ---------------------------
+  ' DS-11 Proceso de Venta
+  ' ---------------------------
+  + crearNuevaVenta() : Venta
+  + agregarCliente(c:Cliente) : void
+  + ingresarCodigoProducto(codigo : int)
+  + ingresarCantidad(cant : int)
+  + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
+  + calcularTotal()
+  + seleccionarMetodoPago(tipo : int)
+  + validarPago() : boolean
+  + procesarPago()
 }
+
 class Persona{
   - nombre : String
   - telefono : int
   + crearPersona()
   + mostrarInfo()
 }
+
 class Proveedor {
   - mail : string
   - cuit : int
   - telefono : int
   - direccion : String
+
+  ' ---------------------------
+  ' DS-03 Registrar Proveedor Nuevo
+  ' ---------------------------
   + obtenerProveedor(cuit : int) : int
   + crearProveedor(nombre,telefono,cuit,mail,direccion)
+  + agregarProveedor(p : Proveedor) : void
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
   + mostrarInfo() : String
   + contactar() : void
   + registrarEntrega(fecha : Date) : void
 }
 
-
 class HistorialStockDiario {
   - registros : List<RegistroStock>
-  + registrarCorte(fecha:Date, inventario:List<Producto>) : void
+
+  ' ---------------------------
+  ' DS-06 Variación de stock
+  ' ---------------------------
   + obtenerStockEnFecha(codigo : int, fecha : Date) : int
+
+  ' ---------------------------
+  ' Otros / soporte
+  ' ---------------------------
+  + registrarCorte(fecha:Date, inventario:List<Producto>) : void
 }
 
 class RegistroStock {
@@ -176,29 +330,20 @@ class RegistroStock {
   - cantidad : int
 }
 
-
-
 ' ==== RELACIONES ====
 Producto "1..1" -- "1..*" Categoría : Pertenece a
-
 Venta "1..1" *-- "1..*" LineaDeVenta : compuesta_por
 LineaDeVenta "1..*" -- "1..1" Producto : refiere_a
-
 Cliente "1..1" -- "1..*" Venta : genera
 Empleado "1..1" -- "1..*" Venta : procesa
 Caja "1..1" -- "1..*" Venta : registra
-
 Venta "1..1" *-- "1..1" Impresion : solicita
 Venta "1..1" -- "1..*" MetodoDePago : pagada_con
 Controlador "1..1" -- "1..*" Caja : supervisada
 Producto "1..*" -- "1..*" Proveedor : suministrado_por
-
 Controlador "1..1" -- "1..1" HistorialStockDiario : usa
-
 HistorialStockDiario "1 1" -- " 0..* " RegistroStock : almacena
-
 Empleado --|> Persona
 Cliente --|> Persona
 Proveedor --|> Persona
-
 @enduml

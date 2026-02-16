@@ -4,7 +4,7 @@ title Diagrama de Secuencia - Actualizar Cantidad de Producto
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
-participant "<<multiobjeto>> categorias:Categorias" as Categorias
+participant "<<multiobjeto>> categorias:Categoria" as Categorias
 participant "prod:Producto" as Producto
 
 '===========================================================
@@ -16,32 +16,40 @@ activate Controlador
 '===========================================================
 ' VALIDACIÓN DE CANTIDAD
 '===========================================================
-alt Cantidad < 0
-    Controlador --> Empleado : <<"La cantidad ingresada no es válida.":string>>
-else Cantidad >= 0
-    '=======================================================
-    ' BÚSQUEDA DEL PRODUCTO POR CÓDIGO (LOOP)
-    '=======================================================
-    loop "Buscar producto por código"
-        Controlador -> Categorias : buscarCodigo(codigo)
-        activate Categorias
-        Categorias --> Controlador : <<prod:Producto>>
-        deactivate Categorias
-    end
+alt nuevaCantidad < 0
+  Controlador --> Empleado : <<"La cantidad ingresada no es válida.":string>>
+else nuevaCantidad >= 0
 
-    alt Producto no encontrado
-        Controlador --> Empleado : <<"El código de producto ingresado no existe":string>>
-    else Producto encontrado
-        '===================================================
-        ' ACTUALIZACIÓN DEL STOCK
-        '===================================================
-        Controlador -> Producto : actualizarCantidadStock(nuevaCantidad)
-        activate Producto
-        Producto --> Controlador : <<"Cantidad actualizada correctamente":string>>
-        deactivate Producto
+  '=======================================================
+  ' BÚSQUEDA DEL PRODUCTO POR CÓDIGO (LOOP)
+  '=======================================================
+  loop "Buscar producto por código"
+    Controlador -> Categorias : buscarCodigo(codigo)
+    activate Categorias
+    Categorias --> Controlador : <<idProducto:int>>
+    deactivate Categorias
 
-        Controlador --> Empleado : <<"Producto actualizado correctamente":string>>
-        deactivate Controlador
-    end
+    note right of Controlador
+      buscarCodigo(codigo):
+      - recorre internamente categorías y sus productos
+      - si encuentra coincidencia, devuelve <<idProducto>>
+      - si no encuentra, devuelve <<null>>
+      - corta iteración al encontrar un id válido
+    end note
+  end
+
+  alt idProducto == null
+    Controlador --> Empleado : <<"El código de producto ingresado no existe":string>>
+  else idProducto != null
+
+    Controlador -> Producto : modificarCantidadStock(nuevaCantidad)
+    activate Producto
+    Producto --> Controlador : <<"Cantidad actualizada correctamente":string>>
+    deactivate Producto
+
+    Controlador --> Empleado : <<"Producto actualizado correctamente":string>>
+    deactivate Controlador
+  end
 end
+
 @enduml

@@ -4,7 +4,6 @@ title Diagrama de Secuencia - Registrar Proveedor Nuevo
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
-participant "prov:Proveedor" as Proveedor
 participant "<<multiobjeto>> proveedores : Proveedor" as proveedores
 
 '===========================================================
@@ -17,47 +16,50 @@ activate Controlador
 ' VALIDACIÓN DE CAMPOS VACÍOS
 '===========================================================
 alt Algún campo obligatorio está vacío
-    Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
-
+  Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
 else Todos los campos completos
 
-    '===========================================================
-    ' VALIDACIÓN DE CUIT (PROVEEDOR EXISTENTE)
-    '===========================================================
-    Controlador -> Proveedor : obtenerProveedor(cuit)
-    activate Proveedor
+  '===========================================================
+  ' VALIDACIÓN DE CUIT (BUSCAR EN MULTIOBJETO PROVEEDORES)
+  '===========================================================
+  loop "Para cada proveedor en proveedores"
+    Controlador -> proveedores : obtenerProveedor(cuit)
+    activate proveedores
+    proveedores --> Controlador : <<cuitProv:int>>
+    deactivate proveedores
+    note right of Controlador
+      obtenerProveedor(cuit):
+      - recorre proveedores
+      - si encuentra coincidencia, devuelve <<cuitProv>>
+      - si no encuentra, devuelve <<null>>
+      - corta iteración al encontrar un cuit válido
+    end note
+  end
 
-    alt Proveedor ya registrado
-        Proveedor --> Controlador : <<"Proveedor existente":string>>
-        
+  alt cuitProv != null
+    Controlador --> Empleado : <<"El CUIT ingresado ya corresponde a un proveedor existente":string>>
+  else cuitProv == null
 
-        Controlador --> Empleado : <<"El CUIT ingresado ya corresponde a un proveedor existente":string>>
+    '===================================================
+    ' CREACIÓN DEL NUEVO PROVEEDOR (NUEVA ENTIDAD)
+    '===================================================
+    create "proveedorNuevo : Proveedor" as proveedorNuevo
+    Controlador -> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
 
-    else CUIT disponible
-        Proveedor --> Controlador : <<"Proveedor no encontrado":string>>
-        deactivate Proveedor
+    '===================================================
+    ' AGREGAR A LA COLECCIÓN DE PROVEEDORES
+    '===================================================
+    Controlador -> proveedores : agregarProveedor(proveedorNuevo : Proveedor)
+    activate proveedores
+    proveedores --> Controlador : <<null>>
+    deactivate proveedores
 
-        '===================================================
-        ' CREACIÓN DEL NUEVO PROVEEDOR (NUEVA ENTIDAD)
-        '===================================================
-        create "pn:proveedorNuevo" as proveedorNuevo
-        Controlador -> proveedorNuevo : crearProveedor(nombre, telefono, cuit, mail, direccion)
-
-        '===================================================
-        ' AGREGAR A LA COLECCIÓN DE PROVEEDORES
-        '===================================================
-        Controlador -> proveedores : agregarProveedor(proveedorNuevo : Proveedor)
-        activate proveedores
-        proveedores --> Controlador : <<null>>
-        deactivate proveedores
-
-        '===================================================
-        ' CONFIRMACIÓN DE REGISTRO
-        '===================================================
-        Controlador --> Empleado : <<"Proveedor registrado correctamente":string>>
-        deactivate Controlador
-    end
+    '===================================================
+    ' CONFIRMACIÓN DE REGISTRO
+    '===================================================
+    Controlador --> Empleado : <<"Proveedor registrado correctamente":string>>
+    deactivate Controlador
+  end
 end
-
 
 @enduml
