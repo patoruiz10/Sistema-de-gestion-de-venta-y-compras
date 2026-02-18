@@ -1,0 +1,43 @@
+﻿@startuml
+!theme plain
+title Diagrama de Secuencia - Crear nuevo empleado
+
+actor "e:Empleado" as Empleado
+participant "c:Controlador" as Controlador
+participant "<<multiobjeto>> empleado : Empleado" as Empleados
+
+'===========================================================
+' INGRESO DE DATOS
+'===========================================================
+Empleado -> Controlador : crearNuevoEmpleado(nombre, telefono, dni, usuario, contraseña, rol)
+activate Controlador
+
+'===========================================================
+' VALIDACIÓN DE CAMPOS VACÍOS
+'===========================================================
+alt Campos vacíos
+  Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
+else Campos válidos
+
+  '=======================================================
+  ' CREACIÓN DEL NUEVO EMPLEADO (NUEVA ENTIDAD)
+  '=======================================================
+  create "nuevoEmpleado : Empleado" as nuevoEmpleado
+  Controlador -> nuevoEmpleado : create(nombre, telefono, dni, usuario, contraseña, rol)
+
+  '=======================================================
+  ' AGREGAR AL MULTIOBJETO DE EMPLEADOS
+  '=======================================================
+  Controlador -> Empleados : agregarEmpleado(nuevoEmpleado: Empleado)
+  activate Empleados
+  Empleados --> Controlador : <<null>>
+  deactivate Empleados
+
+  '=======================================================
+  ' CONFIRMACIÓN DE REGISTRO
+  '=======================================================
+  Controlador --> Empleado : <<"Empleado creado correctamente":string>>
+  deactivate Controlador
+end
+
+@enduml

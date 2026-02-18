@@ -4,40 +4,50 @@ title Diagrama de Secuencia - Consultar Variación del Stock
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
-participant "<<multiobjeto>> cat:Categorias" as Categorias
+participant "<<multiobjeto>> cat:Categoría" as Categorias
 participant "hsd:HistorialStockDiario" as Historial
 
 '===========================================================
-' INICIO DEL PROCESO (CONSULTA GENERAL)
+' INICIO DEL PROCESO
 '===========================================================
 Empleado -> Controlador : consultarVariacionStock(fecha)
 activate Controlador
 
-'===========================================================
-' OBTENER CATÁLOGO COMPLETO
-'===========================================================
-Controlador -> Categorias : obtenerTodosLosProductos()
-activate Categorias
-Categorias --> Controlador : listaProductos : List<Producto>
-deactivate Categorias
 
-'===========================================================
-' LOOP: POR CADA PRODUCTO, OBTENER DATOS ACTUAL Y MES ANTERIOR
-'===========================================================
-loop "Por cada producto en listaProductos"
-  Controlador -> Historial : obtenerStockEnFecha(codigo, fecha)
-  activate Historial
-    Historial --> Controlador : <<cantidadEnFecha:int>>
-  deactivate Historial
+  alt Fecha futura
+        note right of Controlador
+        validarFecha(fecha):
+        - si fecha es futura => inválida
+        - si no => válida
+      end note
+    Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
+  else Fecha válida
 
-  note right of Controlador
-    variacion =  cantidadEnFecha - cantidadActual
-    listaVariaciones = codigo, descripcion, cantidadActual, cantidadEnFecha, variacion
-  end note
+    '===========================================================
+    ' OBTENER CATÁLOGO COMPLETO
+    '===========================================================
+    Controlador -> Categorias : obtenerTodosLosProductos()
+    activate Categorias
+    Categorias --> Controlador : <<listaProductos:List<Producto>>>
+    deactivate Categorias
+
+    '===========================================================
+    ' LOOP: POR CADA PRODUCTO, OBTENER STOCK EN FECHA Y CALCULAR
+    '===========================================================
+    loop "Por cada producto en listaProductos"
+      Controlador -> Historial : obtenerStockEnFecha(codigo, fecha)
+      activate Historial
+      Historial --> Controlador : <<cantidadEnFecha:int>>
+      deactivate Historial
+
+      note right of Controlador
+        cantidadActual = (del Producto actual de listaProductos)
+        variacion = cantidadEnFecha - cantidadActual
+        listaVariaciones = codigo, descripcion, cantidadActual, cantidadEnFecha, variacion
+      end note
+    end
+
+    Controlador --> Empleado : << listaVariaciones:List<string> , "Variación de stock mostrada correctamente":string>>
+    deactivate Controlador
 end
-
-Controlador --> Empleado : <<listaVariaciones, "Variación de stock mostrada correctamente":string>>
-deactivate Controlador
-
-
 @enduml

@@ -1,11 +1,10 @@
 @startuml
 !theme plain
-title Diagrama de Secuencia - Consulta de Historial de Ventas 
+title Diagrama de Secuencia - Consulta de Historial de Ventas
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
-participant "<<multiobjeto>> cs:Caja" as Cajas
-participant "cj:Caja" as Caja
+participant "v:Venta" as Venta
 
 '===========================================================
 ' USUARIO INGRESA FECHA
@@ -16,39 +15,23 @@ activate Controlador
 '===========================================================
 ' VALIDACIONES
 '===========================================================
-alt Fecha == null
-  Controlador --> Empleado : <<"Falta completar la fecha":string>>
-
-
-else Fecha futura al dia actual
+alt Fecha futura al dia actual
   Controlador --> Empleado : <<"La fecha ingresada es futura":string>>
-
-
 else Fecha válida
   '=========================================================
-  ' CONSULTAR VENTAS POR FECHA (TODAS LAS CAJAS)
+  ' CONSULTAR VENTAS POR FECHA
   '=========================================================
-  Controlador -> Cajas : obtenerVentasPorFecha(fecha)
-  activate Cajas
+  Controlador -> Venta : obtenerVentasPorFecha(fecha)
+  activate Venta
+  Venta --> Controlador : <<listaVentas:List<Venta>>>
+  deactivate Venta
 
-  loop "Por cada caja del sistema"
-    Cajas -> Caja : obtenerVentasPorFecha(fecha)
-    activate Caja
-    Caja --> Cajas : ventasCaja : List<Venta>
-    deactivate Caja
+  alt listaVentas vacía
+    Controlador --> Empleado : <<"No se encontraron ventas registradas en la fecha consultada":string>>
+  else listaVentas con datos
+    Controlador --> Empleado : <<listaVentas:List<Venta>>>, <<"Ventas mostradas correctamente":string>>
+    deactivate Controlador
   end
-  
-note right of Cajas
-  Se acumulan las listas
-  ventasCaja en listaVentas
-end note
-
-  Cajas --> Controlador : listaVentas : List<Venta>
-  deactivate Cajas
-
-Controlador --> Empleado : <<listaVentas, "Ventas mostradas correctamente":string>>
-
-  deactivate Controlador
 end
 
 @enduml

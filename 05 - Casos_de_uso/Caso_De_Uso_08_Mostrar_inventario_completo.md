@@ -8,7 +8,7 @@
 ### Camino básico:
 
 1. El usuario selecciona la opción de “Mostrar inventario”.
-2. El sistema muestra todos los productos registrados y sus detalles: código, descripción, cantidad existente, precio unitario, proveedor, precio final.
+2. El sistema muestra todos los productos registrados y sus detalles: código, descripción, cantidad y precio unitario.
 
 ### Caminos alternativos:
 

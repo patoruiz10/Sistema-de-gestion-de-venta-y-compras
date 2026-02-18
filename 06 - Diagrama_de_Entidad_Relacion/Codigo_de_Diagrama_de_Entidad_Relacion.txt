@@ -1,64 +1,79 @@
 @startchen
-title Diagrama Entidad–Relación - Minimarket
+title Diagrama Entidad–Relación - Selvent
 
-' === ENTIDADES ===
-
+' === ENTIDADES (atributos según diagrama de clases) ===
 entity Cliente {
-condicionIVA : string
-nombre : string
-telefono : int
-dni : int
+  condicionIVA : string
+  nombre : String
+  telefono : int
+  dni : int
 }
 
 entity Venta {
-fecha : date
-total : float
-descuento : float
+  fechaHora : Datetime
+  total : float
+  lineaVenta : String
+  descuento
+  pago
 }
 
 entity LineaDeVenta {
-cantidad : int
-precioUnitario : float
-subtotal : float
+  cantidad : int
+  precioUnitario : float
+  Subtotal : float
 }
 
 entity Producto {
-nombre : string
-costo : float
-codigoBarra : int
-categoria : string
-cantidad : int
-precioUnitario : float
+  codigo : int
+  descripcion : string
+  categoria : string
+  cantidad : int
+  precioUnitario : float
 }
 
 entity MetodoDePago {
-tipo : int
-detalles : string
+  tipo : int
+  detalles : String
 }
 
 entity Empleado {
-nombre : string
-telefono : int
-dni : int
-rol : string
+  nombre : String
+  usuario : String
+  contraseña : String
+  telefono : int
+  dni : int
+  rol : String
 }
+
 entity Caja {
-numero : int
-saldoActual : float
-estado : bool
+  numero : int
+  saldoActual : float
+  estado : bool
+}
+
 entity Impresion {
-nroTicket : int
+  nroTicket : int
+  empleado : Empleado
 }
 
 entity Categoria {
-nombre : string
+  nombreCategoria : string
 }
 
 entity Proveedor {
-mail : string
-cuit : int
-telefono : int
-direccion : string
+  mail : string
+  cuit : int
+  telefono : int
+  direccion : String
+}
+
+
+entity HistorialStockDiario {
+}
+
+entity RegistroStock {
+  fecha : Date
+  cantidad : int
 }
 
 ' === RELACIONES ===
@@ -80,16 +95,22 @@ relationship Pertenece_a {
 }
 relationship Suministrado_por {
 }
+relationship Almacena {
+}
+relationship Corresponde_a {
+}
 
-' === CONEXIONES CON CARDINALIDAD ===
+
+' === CONEXIONES CON CARDINALIDAD (manteniendo tus relaciones) ===
 Cliente -1- Genera
 Genera -N- Venta
 
 Venta -1- Compuesta_por
 Compuesta_por -N- LineaDeVenta
 
-LineaDeVenta -1- Refiere_a
-Refiere_a -1- Producto
+' (corrección lógica mínima del vínculo, sigue siendo la misma relación)
+Producto -1- Refiere_a
+Refiere_a -N- LineaDeVenta
 
 Venta -1- Pagada_con
 Pagada_con -N- MetodoDePago
@@ -103,11 +124,19 @@ Registra -N- Venta
 Venta -1- Solicita
 Solicita -1- Impresion
 
-Producto -1- Pertenece_a
-Pertenece_a -N- Categoria
+' (misma relación, orientación correcta)
+Categoria -1- Pertenece_a
+Pertenece_a -N- Producto
 
 Producto -N- Suministrado_por
 Suministrado_por -N- Proveedor
 
-@endchen
+HistorialStockDiario -1- Almacena
+Almacena -N- RegistroStock
 
+
+
+RegistroStock -N- Corresponde_a
+Corresponde_a -1- Producto
+
+@endchen

@@ -6,7 +6,6 @@ actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
 
 participant "<<multiobjeto>> clientes:Cliente" as Clientes
-participant "cli:Cliente" as Cliente
 
 participant "cj:Caja" as Caja
 participant "prod:Producto" as Producto
@@ -113,7 +112,7 @@ loop "Cargar productos mientras el usuario desee agregar"
         activate categorias
     
     
-            categorias --> Controlador : <<idProducto>>
+            categorias --> Controlador : <<idProducto:int>>
             deactivate categorias
             note left of categorias
               buscarCodigo(codigo):
@@ -210,7 +209,7 @@ alt tipoDisponible == null
     Controlador --> Empleado : <<"Método de pago no disponible":string>>
 
 else tipoDisponible != null
-    deactivate MetodoDePago
+
 
     Controlador -> Venta : registraPago(tipoDisponible)
     activate Venta
@@ -235,7 +234,8 @@ else tipoDisponible != null
         loop "Para cada línea de venta de la venta actual"
 
             note left of Controlador
-              Se descuenta la cantidadVendida de cada producto vendido.
+              idProducto = Producto de la LineaDeVenta actual
+              cantidadVendida = Cantidad de la LineaDeVenta actual
             end note
 
             Controlador -> Producto : actualizarCantidadStock(idProducto, cantidadVendida)

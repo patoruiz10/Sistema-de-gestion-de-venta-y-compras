@@ -1,29 +1,22 @@
-# Caso de uso: Crear un nuevo usuario
+# Caso de uso: Crear nuevo empleado
 
-* Actores primarios:  Encargado
-* Actores secundario: No tiene
-* Precondiciones: El usuario debe tener permisos para crear nuevo usuario
-* Postcondiciones: El usuario se agrega a la lista de usuarios del sistema.
+* Actores primarios: Encargado , Empleado
+* Actores secundarios: No tiene
+* Precondición: El usuario debe tener permisos.
+* Postcondición: El usuario se agrega a la lista de usuarios del sistema.
 
 ### Camino básico:
 
-1. El encargado selecciona la opción “Crear nuevo usuario”.
-2. El sistema muestra un formulario para ingresar los datos del nuevo usuario (nombre de usuario, contraseña, rol).
-3. El encargado completa los datos solicitados y confirma la operación seleccionando la opción “Guardar”.
-4. El sistema muestra un mensaje indicando que el usuario se creó correctamente, crea el nuevo usuario con los datos ingresados y lo agrega al listado de usuarios del sistema.
+1. El usuario ingresa los datos: nombre, teléfono, DNI, usuario, contraseña y rol.
+2. El sistema agrega el nuevo empleado al listado de empleados.
 
+### Caminos alternativos
+2.a Existen campos obligatorios sin completar.  
+2.a.1 El sistema muestra: "Faltan completar campos obligatorios".  
+2.a.2 Vuelve al paso 1.
 
+### Escenario de éxito
+* El usuario pudo crear un nuevo empleado.
 
-### Caminos alternativos:
-
-4.a Existen campos obligatorios sin completar.  
-4.a.1 El sistema muestra un mensaje indicando que faltan completar campos obligatorios.  
-4.a.2 Vuelve al paso 3.
-
-### Escenario de éxito:
-
-* El encargado pudo crear un nuevo usuario en el sistema.
-
-### Escenario de fracaso:
-
-* El encargado no pudo crear el nuevo usuario porque dejó campos obligatorios sin completar.
+### Escenario de fracaso
+* El usuario no pudo crear el nuevo empleado porque dejó campos obligatorios sin completar.

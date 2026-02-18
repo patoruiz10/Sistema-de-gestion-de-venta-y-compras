@@ -1,17 +1,13 @@
 @startuml
 !theme plain
-title Diagrama de Secuencia - Registrar Producto Nuevo 
+title Diagrama de Secuencia - Registrar Producto Nuevo
 
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
-
 participant "<<multiobjeto>> cat:Categoria" as Categorias
 participant "<<multiobjeto>> prov:Proveedor" as Proveedores
 participant "<<multiobjeto>> prod:Producto" as Productos
-
-participant "prov:Proveedor" as Proveedor
-participant "cat:Categoria" as Categoria
-participant "prod:Producto" as Producto
+participant "cat:Categoria" as cat
 
 '===========================================================
 ' USUARIO COMPLETA FORMULARIO Y PRESIONA GUARDAR
@@ -24,7 +20,6 @@ activate Controlador
 '===========================================================
 alt Algún campo obligatorio está vacío
   Controlador --> Empleado : <<"Faltan completar campos obligatorios":string>>
-
 else Todos los campos completos
 
   '===========================================================
@@ -38,18 +33,16 @@ else Todos los campos completos
 
     note right of Controlador
       buscarCodigo(codigo):
-              - recorre categorías y sus productos
-              - si encuentra coincidencia, devuelve <<idProducto>>
-              - si no encuentra, devuelve <<null>>
-              - corta iteración al encontrar un id distinto de null.
+      - recorre categorías y sus productos
+      - si encuentra coincidencia, devuelve <<idProducto>>
+      - si no encuentra, devuelve <<null>>
+      - corta iteración al encontrar un id distinto de null.
     end note
   end
 
-  alt idProducto != null (Código repetido)
+  alt idProducto != null
     Controlador --> Empleado : <<"El codigo del producto ingresado ya existe":string>>
-
-
-  else idProducto == null (Código disponible)
+  else idProducto == null
 
     '===========================================================
     ' 2) VALIDACIÓN DEL PROVEEDOR (DEBE EXISTIR)
@@ -60,20 +53,18 @@ else Todos los campos completos
       Proveedores --> Controlador : <<cuitProv:int>>
       deactivate Proveedores
 
-      note right of Controlador  
-            obtenerProveedor(cuit)
-              - recorre proveedores
-              - si encuentra coincidencia, devuelve <<cuitProv>>
-              - si no encuentra, devuelve <<null>>
-              - corta iteración al encontrar un cuit valido.
-        end note
+      note right of Controlador
+        obtenerProveedor(cuit):
+        - recorre proveedores
+        - si encuentra coincidencia, devuelve <<cuitProv>>
+        - si no encuentra, devuelve <<null>>
+        - corta iteración al encontrar un cuit valido.
+      end note
     end
 
-    alt cuitProv == null (Proveedor inexistente)
+    alt cuitProv == null
       Controlador --> Empleado : <<"El proveedor seleccionado no existe":string>>
-
-
-    else cuitProv != null (Proveedor válido)
+    else cuitProv != null
 
       '===========================================================
       ' 3) VALIDACIÓN DE LA CATEGORÍA (DEBE EXISTIR)
@@ -81,34 +72,30 @@ else Todos los campos completos
       loop "Para cada categoría en Categorias"
         Controlador -> Categorias : obtenerCategoria(nombreCategoria)
         activate Categorias
-        Categorias --> Controlador : <<nombreCat:string>>
+        Categorias --> Controlador : <<cat:Categoria>>
         deactivate Categorias
 
         note right of Controlador
           obtenerCategoria(nombreCategoria):
           - recorre categorias
-          - si encuentra coincidencia, devuelve <<nombreCat>>
+          - si encuentra coincidencia, devuelve <<cat:Categoria>>
           - si no encuentra, devuelve <<null>>
           - corta iteración al encontrar una categoria valida.
         end note
       end
 
-      alt nombreCat == null (Categoría inexistente)
+      alt cat == null
         Controlador --> Empleado : <<"La categoría seleccionada no existe":string>>
-
-
-      else nombreCat != null (Categoría válida)
+      else cat != null
 
         '===========================================================
         ' 4) CREAR OBJETO PRODUCTO (NUEVA ENTIDAD)
-        '=========================================================== 
-
-        create "productoNuevo : Producto" as productoNuevo 
-
+        '===========================================================
+        create "productoNuevo : Producto" as productoNuevo
         Controlador -> productoNuevo : create(codigo, descripcion, cantidad, precioUnitario, cuit, nombreCategoria)
 
         '===========================================================
-        ' 5) AGREGAR PRODUCTO AL MULTIOBJETO DE PRODUCTOS           
+        ' 5) AGREGAR PRODUCTO AL MULTIOBJETO DE PRODUCTOS
         '===========================================================
         Controlador -> Productos : agregarProducto(productoNuevo : Producto)
         activate Productos
@@ -118,10 +105,10 @@ else Todos los campos completos
         '===========================================================
         ' 6) AGREGAR PRODUCTO A LA CATEGORÍA SELECCIONADA
         '===========================================================
-        Controlador -> Categoria : agregarProducto(productoNuevo : Producto)
-        activate Categoria
-        Categoria --> Controlador : <<null>>
-        deactivate Categoria
+        Controlador -> cat : agregarProducto(productoNuevo : Producto)
+        activate cat
+        cat --> Controlador : <<null>>
+        deactivate cat
 
         Controlador --> Empleado : <<"Producto registrado correctamente":string>>
         deactivate Controlador

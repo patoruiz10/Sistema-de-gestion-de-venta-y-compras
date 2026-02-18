@@ -1,28 +1,36 @@
 # Caso de uso: Registrar producto nuevo
-* Actores primarios: Empleado, encargado  
-* Actores secundarios: No tiene  
-* Precondición: El usuario debe tener permisos  
+* Actores primarios: Empleado, Encargado
+* Actores secundarios: No tiene
+* Precondición: El usuario debe tener permisos.
 * Postcondición: El producto queda asociado a su proveedor y categoría correspondientes.
 
-### Camino básico:
+### Camino básico
 
-1. El usuario selecciona la opción de “añadir nuevo producto” dentro del sistema.  
-2. El sistema los datos requeridos a completar sobre el producto que se desea ingresar (código, descripción, cantidad, precio unitario, proveedor, categoría).   
-3. El usuario ingresa los datos solicitados del nuevo producto y termina el proceso guardando los datos seleccionando en la opción “Guardar”.  
-4. El sistema muestra mediante una alerta visual que el producto se registró correctamente.
+1. El usuario  ingresa los datos: código, descripción, cantidad, precio unitario, CUIT del proveedor y nombre de categoría.
+2. El sistema agrega el producto al listado de productos.
 
-### Caminos alternativos:
-4.a El usuario no ingresó un código.  
-4.a.1 El sistema muestra una alerta con un mensaje que informa que faltan completar la casilla de código del producto.  
-4.a.2 Vuelve al paso “3”.  
-4.b El usuario ingresó un código de producto repetido.  
-4.b.1 El sistema muestra una alerta con un mensaje que informa que el código del producto ingresado ya existe.  
-4.b.2 Vuelve al paso “3”.
+### Caminos alternativos
+2.a Algún campo obligatorio está vacío.  
+2.a.1 El sistema muestra: "Faltan completar campos obligatorios".  
+2.a.2 Vuelve al paso 1.
 
-### Escenario de éxito:
+2.b El código del producto ya existe.
+2.b.1 El sistema muestra: "El codigo del producto ingresado ya existe".  
+2.b.2 Vuelve al paso 1.
 
-* El usuario pudo registrar un producto.
+2.a El proveedor no existe.  
+2.a.1 El sistema muestra: "El proveedor ingresado no existe".  
+2.a.2 Vuelve al paso 1.
 
-### Escenario de fracaso:
+2.a La categoría no existe.  
+2.a.1 El sistema muestra: "La categoría ingresada no existe".  
+2.a.2 Vuelve al paso 1.
 
-* El usuario no pudo registrar el producto porque dejó campos obligatorios incompletos, ingresó un código repetido o seleccionó un proveedor/categoría inexistentes.
+### Escenario de éxito
+* El usuario registró el producto correctamente.
+
+### Escenario de fracaso
+* El usuario no pudo registrar el producto por campos incompletos.
+* El usuario no pudo registrar el producto por código repetido.
+* El usuario no pudo registrar el producto por proveedor inexistente.
+* El usuario no pudo registrar el producto por categoría inexistente.

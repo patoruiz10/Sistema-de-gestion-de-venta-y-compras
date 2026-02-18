@@ -1,36 +1,49 @@
-﻿# Caso de Uso: Proceso de Venta
+﻿# Caso de uso: Proceso de Venta
 
-* Actores Primarios: Encargado, empleado
-* Actores Secundarios: No tiene
-* Precondiciones: El usuario debe estar logueado y la caja debe estar abierta
-* Postcondiciones: No tiene
+* Actores primarios: Empleado, Encargado
+* Actores secundarios: No tiene
+* Precondiciones: El usuario debe estar logueado y la caja debe estar abierta.
+* Postcondiciones: La venta queda registrada, se genera ticket/comprobante, se actualiza stock y se actualiza el balance de caja.
 
-### Camino Básico
+### Camino básico
 
-1. El usuario inicia el proceso de venta y carga el código de todos los productos a vender.
-2. El sistema muestra el monto total a pagar.
-3. El usuario selecciona el método de pago que prefiera el cliente.
-4. El sistema verifica el método de pago elegido y concreta la venta, guardando el comprobante emitido, registrando la venta y reduciendo del stock el producto.
+1. El usuario inicia una nueva venta.
+2. El sistema crea e inicia la venta.
+3. El usuario ingresa los datos del cliente: nombre, teléfono, DNI, y condición IVA.
+4. El sistema asocia el cliente a la venta.
+5. El usuario ingresa los código de los producto.
+6. El sistema obtiene los productos.
+7. El usuario ingresa las cantidades de los producto.
+8. El sistema agrega los productos a la venta y muestra el total.
+9. El usuario selecciona el método de pago.
+10. El sistema registra el pago y guarda el comprobante.
 
-### Caminos Alternativos
+### Caminos alternativos
+4.a Algún campo obligatorio del cliente está vacío.  
+4.a.1 El sistema muestra: "Faltan completar campos obligatorios".  
+4.a.2 Vuelve al paso 3.
 
-1.a El código de producto ingresado no está registrado en el sistema.  
-1.a.1 El sistema muestra una alerta: "Código inexistente", vuelve al paso "1". 
-3.a El método de pago no está disponible.  
-3.a.1 El sistema muestra una alerta: "Método de pago no disponible", vuelve al paso "3".  
-4.a El monto elegido no se puede concretar por fondos insuficientes.  
-4.a.1 El sistema muestra un mensaje: "No es posible efectuar el pago", vuelve al paso "3".  
-4.b El usuario decide cancelar el proceso de pago. 
-4.b.1 El sistema muestra un mensaje: "Proceso de pago cancelado", fin de caso de uso
+6.a Código inexistente. 
+6.a.1 El sistema muestra: "Código inexistente, vuelva a ingresar".  
+6.a.2 Vuelve al paso 5.
 
-### Escenario de Éxito
+10.a Método de pago no disponible.
+10.a.1 El sistema muestra: "Método de pago no disponible".  
+10.a.2 Vuelve al paso 9.
 
-El usuario realizó la venta y el registro.
+10.b Fondos insuficientes.  
+10.b.1 El sistema muestra: "No es posible efectuar el pago".  
+10.b.2 Vuelve al paso 9.
 
-### Escenario de Fracaso
+10.c Proceso de pago cancelado.  
+10.c.1 El sistema muestra: "Proceso de pago cancelado".  
+10.c.2 Fin del caso de uso.
 
-El usuario no pudo efectuar la venta por un código de producto no existente.
-El usuario no pudo efectuar la venta por un método de pago no disponible.
-El usuario no pudo efectuar la venta por cancelar el proceso de pago.
-El usuario no pudo efectuar la venta por monto insuficiente.
+### Escenario de éxito
+* La venta se registra y se guarda comprobante/ticket.
 
+### Escenario de fracaso
+* La venta no se concreta por campos de cliente incompletos
+* La venta no se concreta por código inexistente.
+* La venta no se concreta por método de pago no disponible.
+* La venta no se concreta por fondos insuficientes.

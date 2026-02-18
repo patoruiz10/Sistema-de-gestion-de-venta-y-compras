@@ -58,7 +58,7 @@ class Categoría {
   ' ---------------------------
   ' DS-09 Registrar Producto Nuevo
   ' ---------------------------
-  + obtenerCategoria(nombreCategoria:string) : String
+  + obtenerCategoria(nombreCategoria:string) : Categoria
   + agregarProducto(p : Producto) : void
 
   ' ---------------------------
@@ -78,6 +78,7 @@ class Cliente {
   ' DS-11 Proceso de Venta
   ' ---------------------------
   + crearCliente(nombre,telefono,dni,condicionIVA)
+  + agregarCliente(c:Cliente) : void
   + buscarCliente(dni:int) : int
   + obtenerClientePorDni(dni:int) : Cliente
 
@@ -85,7 +86,6 @@ class Cliente {
   ' Otros / soporte
   ' ---------------------------
   + mostrarInfo()
-  + iniciaCompra()
 }
 
 class Venta {
@@ -106,9 +106,9 @@ class Venta {
   + obtenerVentasPorFecha(fecha : Date) : List<Venta>
 
   ' ---------------------------
-  ' DS-11 Proceso de Venta
+  ' DS-11 Proceso de Venta      
   ' ---------------------------
-  + iniciaVenta() : String
+  + iniciarVenta() : String
   + agregarDatos(Cliente)
   + agregarLineaVenta(LineaDeVenta)
   + calcularTotal() : float
@@ -133,6 +133,7 @@ class LineaDeVenta {
   ' DS-11 Proceso de Venta
   ' ---------------------------
   + crearLineaVenta(producto : Producto, cant : int) : LineaDeVenta
+  + agregarLineaVenta(lv:LineaDeVenta) : void
   + calcularSubtotal() : float
 
   ' ---------------------------
@@ -158,7 +159,7 @@ class Empleado {
   ' ---------------------------
   ' DS-10 Crear nuevo usuario
   ' ---------------------------
-  + crearUsuario(usuario,contraseña,rol)
+  + crearEmpleado(nombre:String, telefono:int, dni:int, usuario:String, contraseña:String, rol:String) : Empleado
 
   ' ---------------------------
   ' Otros / soporte
@@ -257,7 +258,7 @@ class Controlador {
   ' ---------------------------
   ' DS-09 Registrar Producto Nuevo
   ' ---------------------------
-  + añadirProducto(codigo : int, descripcion : string, cantidad : int, costo : float, cuit : int, nombreCategoria : string)
+  + añadirProducto(codigo : int, descripcion : string, cantidad : int, precioUnitario : float, cuit : int, nombreCategoria : string)
   + agregarProducto(productoNuevo : Producto)
   + eliminarProducto(p : Producto)
   + añadirProducto(p : Producto)
@@ -265,14 +266,14 @@ class Controlador {
   ' ---------------------------
   ' DS-10 Crear nuevo usuario
   ' ---------------------------
-  + crearNuevoUsuario()
-  + agregarUsuario(nuevoEmpleado : Empleado)
+  + crearNuevoEmpleado(nombre:String, telefono:int, dni:int, usuario:String, contraseña:String, rol:String) : void
+  + agregarEmpleado(nuevoEmpleado : Empleado)
 
   ' ---------------------------
   ' DS-11 Proceso de Venta
   ' ---------------------------
   + crearNuevaVenta() : Venta
-  + agregarCliente(c:Cliente) : void
+  + crearCliente(nombre:String, telefono:int, dni:int, condicionIVA:string)
   + ingresarCodigoProducto(codigo : int)
   + ingresarCantidad(cant : int)
   + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
