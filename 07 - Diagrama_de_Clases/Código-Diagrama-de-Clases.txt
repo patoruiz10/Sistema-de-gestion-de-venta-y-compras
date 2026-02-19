@@ -24,7 +24,7 @@ class Producto {
   ' ---------------------------
   ' DS-09 Registrar Producto Nuevo
   ' ---------------------------
-  + crearProducto(codigo : int, descripcion : string, cantidad : int, precioUnitario : float, proveedor : Proveedor, categoria : Categoría) : Producto
+  + crearProducto(codigo : int, descripcion : string, cantidad : int, precioUnitario : float, cuit : Proveedor, nombreCategoria : Categoría) : void
   + agregarProducto(p:Producto) : void
 
   ' ---------------------------
@@ -33,12 +33,6 @@ class Producto {
   + obtenerProductoPorId(codigo : int) : Producto
   + actualizarCantidadStock(codigo : int, cantidadVendida : int)
 
-  ' ---------------------------
-  ' Otros / soporte
-  ' ---------------------------
-  + obtenerCodigo(codigo : int) : Producto
-  + cambiarPrecio(nuevo : float)
-  + asignarCategoria(Categoría)
 }
 
 class Categoría {
@@ -77,7 +71,7 @@ class Cliente {
   ' ---------------------------
   ' DS-11 Proceso de Venta
   ' ---------------------------
-  + crearCliente(nombre,telefono,dni,condicionIVA)
+  + crearCliente(nombre,telefono,dni,condicionIVA): void
   + agregarCliente(c:Cliente) : void
   + buscarCliente(dni:int) : int
   + obtenerClientePorDni(dni:int) : Cliente
@@ -91,9 +85,8 @@ class Cliente {
 class Venta {
   - fechaHora : Datetime
   - total : float
-  - lineaVenta : String
-  - descuento
-  - pago
+  - lineaVenta : List<LineaDeVenta>
+  - pago : MetodoDePago
 
   ' ---------------------------
   ' DS-02 Cierre de Caja (soporte de consulta)
@@ -119,9 +112,6 @@ class Venta {
   ' ---------------------------
   + eliminarLinea(LineaDeVenta)
   + agregarMetododePago(MetodoDePago)
-  + obtenerSubtotal() : float
-  + aplicarDescuento(d : float)
-  + quitarDescuento(d : float)
 }
 
 class LineaDeVenta {
@@ -132,7 +122,7 @@ class LineaDeVenta {
   ' ---------------------------
   ' DS-11 Proceso de Venta
   ' ---------------------------
-  + crearLineaVenta(producto : Producto, cant : int) : LineaDeVenta
+  + crearLineaVenta(producto : Producto, cant : int) : void
   + agregarLineaVenta(lv:LineaDeVenta) : void
   + calcularSubtotal() : float
 
@@ -182,7 +172,6 @@ class Caja {
   ' DS-02 Cierre de Caja
   ' ---------------------------
   + cerrarCaja() : boolean
-  + registrarCierre()
 
   ' ---------------------------
   ' DS-11 Proceso de Venta (post-pago)
@@ -276,7 +265,6 @@ class Controlador {
   + crearCliente(nombre:String, telefono:int, dni:int, condicionIVA:string)
   + ingresarCodigoProducto(codigo : int)
   + ingresarCantidad(cant : int)
-  + crearLineaDeVenta(producto : Producto, cant : int, precioUnitario : float)
   + calcularTotal()
   + seleccionarMetodoPago(tipo : int)
   + validarPago() : boolean
@@ -307,8 +295,6 @@ class Proveedor {
   ' Otros / soporte
   ' ---------------------------
   + mostrarInfo() : String
-  + contactar() : void
-  + registrarEntrega(fecha : Date) : void
 }
 
 class HistorialStockDiario {
@@ -339,7 +325,7 @@ Cliente "1..1" -- "1..*" Venta : genera
 Empleado "1..1" -- "1..*" Venta : procesa
 Caja "1..1" -- "1..*" Venta : registra
 Venta "1..1" *-- "1..1" Impresion : solicita
-Venta "1..1" -- "1..*" MetodoDePago : pagada_con
+Venta "1..1" -- "1..1" MetodoDePago : pagada_con
 Controlador "1..1" -- "1..*" Caja : supervisada
 Producto "1..*" -- "1..*" Proveedor : suministrado_por
 Controlador "1..1" -- "1..1" HistorialStockDiario : usa
