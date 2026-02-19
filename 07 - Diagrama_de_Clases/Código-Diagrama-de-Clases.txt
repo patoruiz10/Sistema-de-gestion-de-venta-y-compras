@@ -1,9 +1,10 @@
 @startuml
 !theme reddress-lightblue
-title Diagrama de Clases - Selvent (agrupado, DS ordenado, sin DS visible)
+title Diagrama de Clases - Selvent
 ' ==== CLASES ====
 
 class Producto {
+
   - codigo : int
   - descripcion : string
   - categoria : string
@@ -299,7 +300,6 @@ class Proveedor {
 
 class HistorialStockDiario {
   - registros : List<RegistroStock>
-
   ' ---------------------------
   ' DS-06 Variación de stock
   ' ---------------------------

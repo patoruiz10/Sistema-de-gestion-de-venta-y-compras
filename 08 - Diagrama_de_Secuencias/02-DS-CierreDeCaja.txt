@@ -5,6 +5,8 @@ title Diagrama de Secuencia - Cierre de Caja
 actor "e:Empleado" as Empleado
 participant "c:Controlador" as Controlador
 participant "cj:Caja" as Caja
+participant "<<multiobjeto>> categorias:Categoria" as Categorias
+participant "hsd:HistorialStockDiario" as Historial
 
 Empleado -> Controlador : cerrarCaja()
 activate Controlador
@@ -14,14 +16,32 @@ activate Caja
 Caja --> Controlador : <<estado:bool>>
 deactivate Caja
 
-alt estado de la caja == false
+alt estado == false
   Controlador --> Empleado : <<"La caja ya está cerrada":string>>
-else estado de la caja == true
+else estado == true
   note right of Controlador
-    fechaHora = now()
+    fecha = now()
   end note
-  Controlador --> Empleado : <<"Cierre de caja realizado con éxito (fecha y hora)":string>>
+
+  Controlador -> Categorias : obtenerTodosLosProductos()
+  activate Categorias
+  Categorias --> Controlador : <<inventario:List<Producto>>>
+  deactivate Categorias
+
+  loop "Por cada Producto en inventario"
+    create "rs:RegistroStock" as Registro
+    Controlador -> Registro : create(fecha, codigo, cantidad)
+    note right of Controlador
+      (se acumulan los RegistroStock en listaRegistros)
+    end note
+  end
+
+  Controlador -> Historial : registrarCorte(fecha, listaRegistros)
+  activate Historial
+  Historial --> Controlador : <<null>>
+  deactivate Historial
+
+  Controlador --> Empleado : <<"Cierre de caja realizado con éxito":string>>
   deactivate Controlador
 end
-
 @enduml
